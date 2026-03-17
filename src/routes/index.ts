@@ -1,4 +1,8 @@
 import { Router } from "express";
+import telegramRoutes from "./telegram";
+import reportsRoutes from "./reports";
+import morningTextRoutes from "./morningText";
+import sendMorningTestRoutes from "./sendMorning";
 
 const router = Router();
 
@@ -8,5 +12,13 @@ router.get("/health", (_req, res) => {
       message: "Server is running",
    });
 });
+
+router.use("/telegram", telegramRoutes);
+
+router.use("/reports", reportsRoutes);
+
+router.use("/reports", morningTextRoutes);
+
+router.use("/reports", sendMorningTestRoutes);
 
 export default router;
