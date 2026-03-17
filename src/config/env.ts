@@ -21,6 +21,8 @@ const envSchema = z.object({
       .default("true")
       .transform((value) => value === "true"),
    CRON_TIME: z.string().default("0 8 * * *"),
+
+   SEND_REPORT_SECRET: z.string().optional(),
 });
 
 const parsedEnv = envSchema.parse(process.env);
@@ -39,4 +41,6 @@ export const env = {
 
    enableCron: parsedEnv.ENABLE_CRON,
    cronTime: parsedEnv.CRON_TIME,
+
+   sendReportSecret: parsedEnv.SEND_REPORT_SECRET,
 };

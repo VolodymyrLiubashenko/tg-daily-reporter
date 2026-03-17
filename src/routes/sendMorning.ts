@@ -4,6 +4,6 @@ import { sendMorningTest } from "../controllers/sendMorningController";
 
 const router = Router();
 
-router.get("/send-morning-test", asyncHandler(sendMorningTest));
+router.post("/send-morning-test", asyncHandler(sendMorningTest));
 
 export default router;
