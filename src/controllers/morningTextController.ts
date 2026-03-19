@@ -20,6 +20,7 @@ export async function getMorningTextPreview(_req: Request, res: Response) {
       f1RaceName: data.f1Race.raceName,
       f1RaceDate: data.f1Race.formattedDate,
       f1RaceLocation: `${data.f1Race.circuitName}, ${data.f1Race.locality}, ${data.f1Race.country}`,
+      beers: data.beers,
    });
 
    res.json({

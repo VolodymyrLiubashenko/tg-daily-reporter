@@ -3,9 +3,10 @@ import { getNextManchesterUnitedMatch } from "../sports/getNextManchesterUnitedM
 import { formatKyivDateTime } from "../../utils/formatKyivDateTime";
 import { formatDateUk } from "../../utils/formatDateUk";
 import { getNextF1Race } from "../f1/getNextRace";
+import { getTapBeerList } from "../beer/getTapBeerList";
 
 export async function buildMorningReport() {
-   const [currency, match, f1Race] = await Promise.all([getUsdToUahRate(), getNextManchesterUnitedMatch(), getNextF1Race()]);
+   const [currency, match, f1Race, beers] = await Promise.all([getUsdToUahRate(), getNextManchesterUnitedMatch(), getNextF1Race(), getTapBeerList()]);
 
    return {
       currency,
@@ -17,5 +18,6 @@ export async function buildMorningReport() {
          ...f1Race,
          formattedDate: formatDateUk(f1Race.date),
       },
+      beers,
    };
 }

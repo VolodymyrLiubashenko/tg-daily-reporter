@@ -1,5 +1,6 @@
 import OpenAI from "openai";
 import { env } from "../../config/env";
+import { TTapBeer } from "../beer/getTapBeerList";
 
 const client = new OpenAI({
    apiKey: env.openaiApiKey,
@@ -16,6 +17,7 @@ type TInput = {
    f1RaceDate: string;
    f1RaceLocation: string;
    previousPosts?: string[];
+   beers: TTapBeer[];
 };
 
 export async function generateMorningPost(input: TInput) {
@@ -23,7 +25,7 @@ export async function generateMorningPost(input: TInput) {
       throw new Error("OPENAI_API_KEY is not set");
    }
 
-   const { opponent, matchDate, competition, venue, usdRate, rateDate, f1RaceName, f1RaceDate, f1RaceLocation, previousPosts = [] } = input;
+   const { opponent, matchDate, competition, venue, usdRate, rateDate, f1RaceName, f1RaceDate, f1RaceLocation, previousPosts = [], beers = [] } = input;
 
    const prompt = `
 Ти створюєш щоденний ранковий Telegram-пост українською мовою.
@@ -47,6 +49,11 @@ export async function generateMorningPost(input: TInput) {
 
 Курс:
 - Не пиши слово курс і дата не потрібна
+
+ПИВО:
+- Не пиши слово пиво і дата не потрібна
+- Вибери пиво на основі даних про попередній пост
+- Вибери одне пиво рандомно із списку і напиши коротке, рекламуюче пиво, речення
 
 ЖАРТ:
 - В кінці додай короткий легкий жарт або фразу для гарного настрою
@@ -76,6 +83,9 @@ ${previousPosts.length ? previousPosts.map((p, i) => `${i + 1}. ${p}`).join("\n"
 💵 Курс валют:
 - 1 USD = ${usdRate} грн
 - дата: ${rateDate}
+
+🍺 Пиво на кранах:
+${beers.length ? beers.map((beer, index) => `${index + 1}. ${beer.name}`).join("\n") : "Немає"}
 
 ЗАВДАННЯ:
 Створи короткий, природний і приємний ранковий пост українською мовою.
