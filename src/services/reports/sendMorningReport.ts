@@ -19,6 +19,7 @@ export async function sendMorningReport() {
       f1RaceDate: data.f1Race.formattedDate,
       f1RaceLocation: `${data.f1Race.circuitName}, ${data.f1Race.locality}, ${data.f1Race.country}`,
       previousPosts,
+      beers: data.beers,
    });
 
    await sendTelegramMessage(text);
