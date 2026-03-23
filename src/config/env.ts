@@ -23,6 +23,9 @@ const envSchema = z.object({
    CRON_TIME: z.string().default("0 8 * * *"),
 
    SEND_REPORT_SECRET: z.string().optional(),
+
+   MONGODB_URI: z.string().optional(),
+   MONGODB_DB_NAME: z.string().optional(),
 });
 
 const parsedEnv = envSchema.parse(process.env);
@@ -43,4 +46,7 @@ export const env = {
    cronTime: parsedEnv.CRON_TIME,
 
    sendReportSecret: parsedEnv.SEND_REPORT_SECRET,
+
+   mongoDbUri: parsedEnv.MONGODB_URI,
+   mongoDbName: parsedEnv.MONGODB_DB_NAME,
 };
