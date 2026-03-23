@@ -3,6 +3,7 @@ import telegramRoutes from "./telegram";
 import reportsRoutes from "./reports";
 import morningTextRoutes from "./morningText";
 import sendMorningTestRoutes from "./sendMorning";
+import telegramWebhookRoutes from "./telegramWebhook";
 
 const router = Router();
 
@@ -14,6 +15,7 @@ router.get("/health", (_req, res) => {
 });
 
 router.use("/telegram", telegramRoutes);
+router.use("/telegram-webhook", telegramWebhookRoutes);
 
 router.use("/reports", reportsRoutes);
 
