@@ -15,7 +15,7 @@ router.get("/health", (_req, res) => {
 });
 
 router.use("/telegram", telegramRoutes);
-router.use("/telegram-webhook", telegramWebhookRoutes);
+router.use("/telegram", telegramWebhookRoutes);
 
 router.use("/reports", reportsRoutes);
 
