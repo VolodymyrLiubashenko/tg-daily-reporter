@@ -4,6 +4,8 @@ import reportsRoutes from "./reports";
 import morningTextRoutes from "./morningText";
 import sendMorningTestRoutes from "./sendMorning";
 import telegramWebhookRoutes from "./telegramWebhook";
+import activityRoutes from "./activity";
+import raffleRoutes from "./raffle";
 
 const router = Router();
 
@@ -22,5 +24,9 @@ router.use("/reports", reportsRoutes);
 router.use("/reports", morningTextRoutes);
 
 router.use("/reports", sendMorningTestRoutes);
+
+router.use("/activity", activityRoutes);
+
+router.use("/raffle", raffleRoutes);
 
 export default router;

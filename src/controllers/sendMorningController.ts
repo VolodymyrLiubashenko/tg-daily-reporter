@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { sendMorningReport } from "../services/reports/sendMorningReport";
 import { env } from "../config/env";
+import { trackBotMessage } from "../services/bot/trackBotMessage";
 
 export async function sendMorningTest(req: Request, res: Response) {
    const secret = req.headers["x-cron-secret"];
@@ -13,6 +14,14 @@ export async function sendMorningTest(req: Request, res: Response) {
    }
 
    const result = await sendMorningReport();
+
+   const sentAt = new Date();
+
+   await trackBotMessage({
+      chatId: env.telegramChatId || "",
+      message: result.text,
+      sentAt,
+   });
 
    res.json({
       ok: true,
