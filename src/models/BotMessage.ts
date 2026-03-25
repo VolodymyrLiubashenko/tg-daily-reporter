@@ -10,6 +10,11 @@ const botMessageSchema = new Schema({
       type: String,
       required: true,
    },
+   theme: {
+      type: String,
+      required: true,
+      enum: ["morning", "drawBeer"],
+   },
    sentAt: {
       type: Date,
       required: true,

@@ -21,6 +21,7 @@ export async function sendMorningTest(req: Request, res: Response) {
       chatId: env.telegramChatId || "",
       message: result.text,
       sentAt,
+      theme: "morning",
    });
 
    res.json({

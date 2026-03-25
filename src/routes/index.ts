@@ -6,6 +6,8 @@ import sendMorningTestRoutes from "./sendMorning";
 import telegramWebhookRoutes from "./telegramWebhook";
 import activityRoutes from "./activity";
 import raffleRoutes from "./raffle";
+import sentDrawBeerPostRoutes from "./sentDrawBeerPost";
+import sendRaffleResultRoutes from "./sendRaffleResult";
 
 const router = Router();
 
@@ -28,5 +30,9 @@ router.use("/reports", sendMorningTestRoutes);
 router.use("/activity", activityRoutes);
 
 router.use("/raffle", raffleRoutes);
+
+router.use("/raffle", sendRaffleResultRoutes);
+
+router.use("/draw-beer", sentDrawBeerPostRoutes);
 
 export default router;

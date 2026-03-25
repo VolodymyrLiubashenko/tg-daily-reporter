@@ -1,0 +1,19 @@
+name: Send raffle result
+
+on:
+   schedule:
+      # Пятница, 17:05 UTC (~20:05 MSK).
+      - cron: "5 17 * * 5"
+   workflow_dispatch:
+
+jobs:
+   send-raffle-result:
+      runs-on: ubuntu-latest
+
+      steps:
+         - name: Call raffle result endpoint
+           run: |
+              curl --fail --silent --show-error \
+                -X POST \
+                -H "x-cron-secret: ${{ secrets.CRON_SECRET }}" \
+                "${{ secrets.RAFFLE_RESULT_URL }}"
