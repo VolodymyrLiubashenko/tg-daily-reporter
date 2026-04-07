@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import { env } from "../../config/env";
 import { TTapBeer } from "../beer/getTapBeerList";
+import { TNextObolonMatch } from "../sports/getObolonNextMatch";
 
 const client = new OpenAI({
    apiKey: env.openaiApiKey,
@@ -20,6 +21,7 @@ type TInput = {
    beers: TTapBeer[];
    isWeekend: boolean;
    weekday: string;
+   obolonMatch: TNextObolonMatch;
 };
 
 export async function generateMorningPost(input: TInput) {
@@ -27,7 +29,9 @@ export async function generateMorningPost(input: TInput) {
       throw new Error("OPENAI_API_KEY is not set");
    }
 
-   const { opponent, matchDate, competition, venue, usdRate, rateDate, f1RaceName, f1RaceDate, f1RaceLocation, previousPosts = [], beers = [], isWeekend, weekday } = input;
+   const { opponent, obolonMatch, matchDate, competition, venue, usdRate, rateDate, f1RaceName, f1RaceDate, f1RaceLocation, previousPosts = [], beers = [], isWeekend, weekday } = input;
+
+   const { date: obolonDate, time: obolonTime, home: obolonHome, away: obolonAway, competition: obolonCompetition, season: obolonSeason, venue: obolonVenue, opponent: obolonOpponent } = obolonMatch;
 
    const prompt = `
 Ти створюєш щоденний ранковий Telegram-пост українською мовою для чату.
@@ -45,7 +49,7 @@ export async function generateMorningPost(input: TInput) {
 ОСНОВНІ ПРАВИЛА:
 - Використовуй тільки українську мову
 - Поверни тільки готовий текст поста без пояснень
-- 5–10 коротких рядків основного тексту
+- 8–12 коротких рядків основного тексту
 - В кінці окремим рядком додай короткий легкий жарт або фразу для настрою
 - Використовуй 1–5 емодзі максимум на весь пост
 - Не вигадуй фактів
@@ -100,12 +104,21 @@ export async function generateMorningPost(input: TInput) {
 - Просто природно встав інформацію: 1 USD = ${usdRate} грн
 
 ФУТБОЛ:
+Матч Manchester United:
 - Якщо матч Manchester United сьогодні, обов’язково додай коротке побажання для фанатів
 - Можна дуже коротко й живо використати мотив із гімну:
   Glory, glory Man United / As the Reds go marching on, on, on
 - Не цитуй гімн повністю щоразу
 - Якщо матч не сьогодні, просто коротко нагадай про гру
 - Не перевантажуй цей блок
+
+Матч Оболонь:
+- Згадай матч Оболоні коротко й природно
+- Якщо гра вдома, нагадай щоб у всіх у кого є змога, було б чудово приїхати підтримати команду на стадіоні
+- Без сухої подачі
+- Просто як частину ранкового дайджесту
+- В день гри Оболоні, обов'язково згадай Кричалку "Тільки Київ - тільки Оболонь" 
+
 
 ФОРМУЛА 1:
 - Згадай гонку коротко й природно
@@ -152,6 +165,12 @@ ${previousPosts.length ? previousPosts.map((p, i) => `${i + 1}. ${p}`).join("\n"
 - дата і час: ${matchDate}
 - турнір: ${competition}
 - ${venue === "home" ? "матч удома" : "матч на виїзді"}
+
+-команда: Оболонь
+- суперник: ${obolonOpponent}
+- дата і час: ${obolonDate} ${obolonTime}
+- турнір: ${obolonCompetition}
+- ${obolonVenue === "home" ? "матч удома" : "матч на виїзді"}
 
 🏎️ Формула 1:
 - гонка: ${f1RaceName}

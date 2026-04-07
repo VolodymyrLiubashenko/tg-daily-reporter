@@ -5,9 +5,10 @@ import { formatDateUk } from "../../utils/formatDateUk";
 import { getNextF1Race } from "../f1/getNextRace";
 import { getTapBeerList } from "../beer/getTapBeerList";
 import { getWeekdayNameUk } from "../../utils/date";
+import { getObolonNextMatch } from "../sports/getObolonNextMatch";
 
 export async function buildMorningReport() {
-   const [currency, match, f1Race, beers] = await Promise.all([getUsdToUahRate(), getNextManchesterUnitedMatch(), getNextF1Race(), getTapBeerList()]);
+   const [currency, match, f1Race, beers, obolonMatch] = await Promise.all([getUsdToUahRate(), getNextManchesterUnitedMatch(), getNextF1Race(), getTapBeerList(), getObolonNextMatch()]);
    const weekday = getWeekdayNameUk(new Date());
    const isWeekend = weekday === "Субота" || weekday === "Неділя";
 
@@ -16,6 +17,10 @@ export async function buildMorningReport() {
       match: {
          ...match,
          kyivDateTime: formatKyivDateTime(match.utcDate),
+      },
+      obolonMatch: {
+         ...obolonMatch,
+         kyivDateTime: formatKyivDateTime(obolonMatch.date),
       },
       f1Race: {
          ...f1Race,

@@ -24,6 +24,7 @@ export async function getMorningTextPreview(_req: Request, res: Response) {
       beers: data.beers,
       isWeekend: data.isWeekend,
       weekday: data.weekday,
+      obolonMatch: data.obolonMatch,
    });
 
    res.json({

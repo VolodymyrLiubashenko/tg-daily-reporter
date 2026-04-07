@@ -3,7 +3,7 @@ name: Send raffle result
 on:
    schedule:
       # Пятница, 17:05 UTC (~20:05 MSK).
-      - cron: "5 17 * * 5"
+      - cron: "5 16 * * 5"
    workflow_dispatch:
 
 jobs:

@@ -17,6 +17,7 @@ export async function sendMorningReport() {
       venue: data.match.venue,
       usdRate: data.currency.rate,
       rateDate: data.currency.date,
+      obolonMatch: data.obolonMatch,
       f1RaceName: data.f1Race.raceName,
       f1RaceDate: data.f1Race.formattedDate,
       f1RaceLocation: `${data.f1Race.circuitName}, ${data.f1Race.locality}, ${data.f1Race.country}`,
