@@ -19,6 +19,7 @@ export type TNextObolonMatch = {
    season: string;
    venue: "home" | "away";
    opponent: string;
+   utcDate: string;
 };
 
 const OBOLON_GAMES_URL = "https://fc.obolon.ua/games/";
@@ -57,8 +58,11 @@ export async function getObolonNextMatch(): Promise<TNextObolonMatch> {
    }
 
    const isHome = home.toLowerCase().includes(TEAM_NAME.toLowerCase());
+   // 17.04.2026 16:00
+   const utcDate = `${date.split(".").reverse().join("-")}T${time}`;
 
    return {
+      utcDate,
       date,
       time,
       home,

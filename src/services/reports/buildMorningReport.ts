@@ -20,7 +20,7 @@ export async function buildMorningReport() {
       },
       obolonMatch: {
          ...obolonMatch,
-         kyivDateTime: formatKyivDateTime(obolonMatch.date),
+         kyivDateTime: formatKyivDateTime(obolonMatch.utcDate),
       },
       f1Race: {
          ...f1Race,
