@@ -4,6 +4,7 @@ import { sendTelegramMessage } from "../services/telegram/sendMessage";
 import { env } from "../config/env";
 import { getReportingPeriodPreviousSaturdayThroughNextSaturday } from "../utils/date";
 import { pickWeeklyWinner } from "../services/raffle/pickWeeklyWinner";
+import { getTapBeerList } from "../services/beer/getTapBeerList";
 
 export async function sendRaffleResultController(req: Request, res: Response) {
    const secret = req.headers["x-cron-secret"];
@@ -19,13 +20,17 @@ export async function sendRaffleResultController(req: Request, res: Response) {
 
    const winner = await pickWeeklyWinner(env.telegramChatId || "", startDate, endDate);
 
-   const post = await generateRaffleWinnerPost({ winner });
+   const beers = await getTapBeerList();
+   const prizeBeerName = beers[Math.floor(Math.random() * beers.length)].name;
+
+   const post = await generateRaffleWinnerPost({ winner, prizeBeerName });
 
    await sendTelegramMessage(post);
 
    res.json({
       ok: true,
       winner,
+      prizeBeerName,
       post,
       startDate,
       endDate,

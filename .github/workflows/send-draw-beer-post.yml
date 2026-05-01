@@ -2,10 +2,10 @@ name: Send draw beer post
 
 on:
    schedule:
-      # Среда и суббота, 10:05 UTC (~13:05 MSK).
-      - cron: "5 9 * * 3"
-      - cron: "5 9 * * 5"
-      - cron: "5 9 * * 6"
+      # Среда и суббота, 09:05 UTC (~12:05 MSK).
+      - cron: "5 8 * * 3"
+      - cron: "5 8 * * 5"
+      - cron: "5 8 * * 6"
    workflow_dispatch:
 
 jobs:
