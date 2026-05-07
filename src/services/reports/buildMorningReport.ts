@@ -1,3 +1,4 @@
+import { getEurToUahRate } from "../currency/getEurToUahRate";
 import { getUsdToUahRate } from "../currency/getUsdToUahRate";
 import { getNextManchesterUnitedMatch } from "../sports/getNextManchesterUnitedMatch";
 import { formatKyivDateTime } from "../../utils/formatKyivDateTime";
@@ -17,8 +18,9 @@ async function fromSource<T>(label: string, fn: () => Promise<T>): Promise<T> {
 }
 
 export async function buildMorningReport() {
-   const [currency, match, f1Race, beers, obolonMatch] = await Promise.all([
+   const [usdCurrency, eurCurrency, match, f1Race, beers, obolonMatch] = await Promise.all([
       fromSource("NBU USD/UAH", getUsdToUahRate),
+      fromSource("NBU EUR/UAH", getEurToUahRate),
       getNextManchesterUnitedMatch(),
       fromSource("F1 next race", getNextF1Race),
       fromSource("Beer menu", getTapBeerList),
@@ -28,7 +30,8 @@ export async function buildMorningReport() {
    const isWeekend = weekday === "Субота" || weekday === "Неділя";
 
    return {
-      currency,
+      usdCurrency,
+      eurCurrency,
       match: match
          ? { ...match, kyivDateTime: formatKyivDateTime(match.utcDate) }
          : null,

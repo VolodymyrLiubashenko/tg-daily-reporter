@@ -11,9 +11,6 @@ const envSchema = z.object({
    TELEGRAM_BOT_TOKEN: z.string().optional(),
    TELEGRAM_CHAT_ID: z.string().optional(),
 
-   FOOTBALL_DATA_API_TOKEN: z.string().optional(),
-   MANCHESTER_UNITED_TEAM_ID: z.string().default("66"),
-
    OPENAI_API_KEY: z.string().optional(),
 
    ENABLE_CRON: z
@@ -45,9 +42,6 @@ export const env = {
 
    telegramBotToken: trimEnv(parsedEnv.TELEGRAM_BOT_TOKEN),
    telegramChatId: trimEnv(parsedEnv.TELEGRAM_CHAT_ID),
-
-   footballDataApiToken: trimEnv(parsedEnv.FOOTBALL_DATA_API_TOKEN),
-   manchesterUnitedTeamId: trimEnv(parsedEnv.MANCHESTER_UNITED_TEAM_ID) ?? "66",
 
    openaiApiKey: trimEnv(parsedEnv.OPENAI_API_KEY),
 

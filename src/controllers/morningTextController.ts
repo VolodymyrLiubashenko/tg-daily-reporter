@@ -12,8 +12,10 @@ export async function getMorningTextPreview(_req: Request, res: Response) {
 
    const text = await generateMorningPost({
       muMatch: data.match,
-      usdRate: data.currency.rate,
-      rateDate: data.currency.date,
+      usdRate: data.usdCurrency.rate,
+      rateDate: data.usdCurrency.date,
+      eurRate: data.eurCurrency.rate,
+      eurRateDate: data.eurCurrency.date,
       previousPosts: previousPosts,
       f1RaceName: data.f1Race.raceName,
       f1RaceDate: data.f1Race.formattedDate,

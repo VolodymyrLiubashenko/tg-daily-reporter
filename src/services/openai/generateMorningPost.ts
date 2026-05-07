@@ -12,6 +12,8 @@ type TInput = {
    muMatch: TNextMatch | null;
    usdRate: number;
    rateDate: string;
+   eurRate: number;
+   eurRateDate: string;
    f1RaceName: string;
    f1RaceDate: string;
    f1RaceLocation: string;
@@ -27,7 +29,21 @@ export async function generateMorningPost(input: TInput) {
       throw new Error("OPENAI_API_KEY is not set");
    }
 
-   const { muMatch, obolonMatch, usdRate, rateDate, f1RaceName, f1RaceDate, f1RaceLocation, previousPosts = [], beers = [], isWeekend, weekday } = input;
+   const {
+      muMatch,
+      obolonMatch,
+      usdRate,
+      rateDate,
+      eurRate,
+      eurRateDate,
+      f1RaceName,
+      f1RaceDate,
+      f1RaceLocation,
+      previousPosts = [],
+      beers = [],
+      isWeekend,
+      weekday,
+   } = input;
 
    const muFootballRules = muMatch
       ? `Матч Manchester United:
@@ -94,7 +110,7 @@ export async function generateMorningPost(input: TInput) {
 - Не використовуй лапки без потреби
 - Починай пункт про футбол з емодзі м'яча
 - Починай пункт про формулу з емодзі боліда
-- Починай пункт з курсом доллара з емодзі долара
+- Валюти подавай двома окремими рядками: перший починай з емодзі долара 💵, другий — з емодзі євро 💶
 
 ВИМОГИ ДО РІЗНОМАНІТНОСТІ:
 - Не повторюй стиль, структуру, ритм і вступи з попередніх постів
@@ -137,7 +153,9 @@ export async function generateMorningPost(input: TInput) {
 КУРС ВАЛЮТ:
 - Не пиши слово "курс"
 - Не пиши дату
-- Просто природно встав інформацію: 1 USD = ${usdRate} грн
+- Два окремі рядки (не в один рядок):
+  - перший рядок починається з 💵 і містить лише 1 USD = ${usdRate} грн
+  - другий рядок починається з 💶 і містить лише 1 EUR = ${eurRate} грн
 
 ФУТБОЛ:
 ${muFootballRules}
@@ -193,9 +211,12 @@ ${obolonFootballData}
 - дата: ${f1RaceDate}
 - місце: ${f1RaceLocation}
 
-💵 Валюта:
-- 1 USD = ${usdRate} грн
-- дата: ${rateDate}
+Валюта:
+- У пості — два окремі рядки: 💵 … USD … і 💶 … EUR … (дати в пост не додавай)
+- 💵 1 USD = ${usdRate} грн
+- 💶 1 EUR = ${eurRate} грн
+- дата курсу USD (НБУ, лише для точності): ${rateDate}
+- дата курсу EUR (НБУ, лише для точності): ${eurRateDate}
 
 🍺 На кранах:
 ${beers.length ? beers.map((beer, index) => `${index + 1}. ${beer.name}`).join("\n") : "Немає"}
