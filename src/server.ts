@@ -1,3 +1,8 @@
+import dns from "node:dns";
+
+// Many VPS / containers advertise broken IPv6; Node may prefer it and HTTPS hangs.
+dns.setDefaultResultOrder("ipv4first");
+
 import { app } from "./app";
 import { env } from "./config/env";
 import { startMorningReportJob } from "./jobs/morningReportJob";

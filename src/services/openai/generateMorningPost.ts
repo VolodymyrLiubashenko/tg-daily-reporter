@@ -21,7 +21,7 @@ type TInput = {
    beers: TTapBeer[];
    isWeekend: boolean;
    weekday: string;
-   obolonMatch: TNextObolonMatch;
+   obolonMatch: TNextObolonMatch | null;
 };
 
 export async function generateMorningPost(input: TInput) {
@@ -31,7 +31,23 @@ export async function generateMorningPost(input: TInput) {
 
    const { opponent, obolonMatch, matchDate, competition, venue, usdRate, rateDate, f1RaceName, f1RaceDate, f1RaceLocation, previousPosts = [], beers = [], isWeekend, weekday } = input;
 
-   const { date: obolonDate, time: obolonTime, home: obolonHome, away: obolonAway, competition: obolonCompetition, season: obolonSeason, venue: obolonVenue, opponent: obolonOpponent } = obolonMatch;
+   const obolonFootballRules = obolonMatch
+      ? `Матч Оболонь:
+- Згадай матч Оболоні коротко й природно
+- Якщо гра вдома, нагадай щоб у всіх у кого є змога, було б чудово приїхати підтримати команду на стадіоні
+- Без сухої подачі
+- Просто як частину ранкового дайджесту
+- В день гри Оболоні, обов'язково згадай Кричалку "Тільки Київ - тільки Оболонь" `
+      : `Матч Оболонь:
+- Дані про наступний матч Оболоні зараз недоступні — не вигадуй суперника, дату чи турнір і не згадуй конкретний розклад Оболоні в тексті.`;
+
+   const obolonFootballData = obolonMatch
+      ? `-команда: Оболонь
+- суперник: ${obolonMatch.opponent}
+- дата і час: ${obolonMatch.date} ${obolonMatch.time}
+- турнір: ${obolonMatch.competition}
+- ${obolonMatch.venue === "home" ? "матч удома" : "матч на виїзді"}`
+      : `- Оболонь: дані про наступний матч недоступні — не додавай у пост вигаданих дат чи назв.`;
 
    const prompt = `
 Ти створюєш щоденний ранковий Telegram-пост українською мовою для чату.
@@ -115,13 +131,7 @@ export async function generateMorningPost(input: TInput) {
 - Якщо матч не сьогодні, просто коротко нагадай про гру
 - Не перевантажуй цей блок
 
-Матч Оболонь:
-- Згадай матч Оболоні коротко й природно
-- Якщо гра вдома, нагадай щоб у всіх у кого є змога, було б чудово приїхати підтримати команду на стадіоні
-- Без сухої подачі
-- Просто як частину ранкового дайджесту
-- В день гри Оболоні, обов'язково згадай Кричалку "Тільки Київ - тільки Оболонь" 
-
+${obolonFootballRules}
 
 ФОРМУЛА 1:
 - Згадай гонку коротко й природно
@@ -169,11 +179,7 @@ ${previousPosts.length ? previousPosts.map((p, i) => `${i + 1}. ${p}`).join("\n"
 - турнір: ${competition}
 - ${venue === "home" ? "матч удома" : "матч на виїзді"}
 
--команда: Оболонь
-- суперник: ${obolonOpponent}
-- дата і час: ${obolonDate} ${obolonTime}
-- турнір: ${obolonCompetition}
-- ${obolonVenue === "home" ? "матч удома" : "матч на виїзді"}
+${obolonFootballData}
 
 🏎️ Формула 1:
 - гонка: ${f1RaceName}

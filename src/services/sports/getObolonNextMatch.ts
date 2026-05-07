@@ -25,51 +25,52 @@ export type TNextObolonMatch = {
 const OBOLON_GAMES_URL = "https://fc.obolon.ua/games/";
 const TEAM_NAME = "Оболонь";
 
-export async function getObolonNextMatch(): Promise<TNextObolonMatch> {
-   const response = await axios.get<string>(OBOLON_GAMES_URL, {
-      timeout: 15000,
-      headers: {
-         "User-Agent": "Mozilla/5.0",
-      },
-      httpsAgent,
-   });
+export async function getObolonNextMatch(): Promise<TNextObolonMatch | null> {
+   try {
+      const response = await axios.get<string>(OBOLON_GAMES_URL, {
+         timeout: 15000,
+         headers: {
+            "User-Agent": "Mozilla/5.0",
+         },
+         httpsAgent,
+      });
 
-   const $ = cheerio.load(response.data);
+      const $ = cheerio.load(response.data);
 
-   const row = $(".tb_fixtures.tb_matches.tb_fixtures-normal tbody tr:first-child");
+      const row = $(".tb_fixtures.tb_matches.tb_fixtures-normal tbody tr:first-child");
 
-   if (!row.length) {
-      throw new Error("Next Obolon match row not found");
+      if (!row.length) {
+         return null;
+      }
+
+      const date = normalizeText(row.find("td.date").text());
+      const home = normalizeText(row.find("td.home").text());
+      const away = normalizeText(row.find("td.away").text());
+      const time = normalizeText(row.find("td.time").text());
+      const competition = normalizeText(row.find("td.competition").text());
+      const season = normalizeText(row.find("td.season").text());
+
+      if (!date || !home || !away) {
+         return null;
+      }
+
+      const isHome = home.toLowerCase().includes(TEAM_NAME.toLowerCase());
+      // 17.04.2026 16:00
+      const utcDate = `${date.split(".").reverse().join("-")}T${time}`;
+
+      return {
+         utcDate,
+         date,
+         time,
+         home,
+         away,
+         competition,
+         season,
+         venue: isHome ? "home" : "away",
+         opponent: isHome ? away : home,
+      };
+   } catch {
+      console.warn("[getObolonNextMatch] failed");
+      return null;
    }
-
-   if (!row.length) {
-      throw new Error("Next Obolon match row not found");
-   }
-
-   const date = normalizeText(row.find("td.date").text());
-   const home = normalizeText(row.find("td.home").text());
-   const away = normalizeText(row.find("td.away").text());
-   const time = normalizeText(row.find("td.time").text());
-   const competition = normalizeText(row.find("td.competition").text());
-   const season = normalizeText(row.find("td.season").text());
-
-   if (!date || !home || !away) {
-      throw new Error("Failed to parse next Obolon match");
-   }
-
-   const isHome = home.toLowerCase().includes(TEAM_NAME.toLowerCase());
-   // 17.04.2026 16:00
-   const utcDate = `${date.split(".").reverse().join("-")}T${time}`;
-
-   return {
-      utcDate,
-      date,
-      time,
-      home,
-      away,
-      competition,
-      season,
-      venue: isHome ? "home" : "away",
-      opponent: isHome ? away : home,
-   };
 }

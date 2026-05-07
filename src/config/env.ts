@@ -30,23 +30,32 @@ const envSchema = z.object({
 
 const parsedEnv = envSchema.parse(process.env);
 
+/** Leading/trailing whitespace from hosting UIs often breaks auth headers. */
+function trimEnv(value: string | undefined): string | undefined {
+   if (value === undefined) {
+      return undefined;
+   }
+   const t = value.trim();
+   return t === "" ? undefined : t;
+}
+
 export const env = {
    port: parsedEnv.PORT,
    nodeEnv: parsedEnv.NODE_ENV,
 
-   telegramBotToken: parsedEnv.TELEGRAM_BOT_TOKEN,
-   telegramChatId: parsedEnv.TELEGRAM_CHAT_ID,
+   telegramBotToken: trimEnv(parsedEnv.TELEGRAM_BOT_TOKEN),
+   telegramChatId: trimEnv(parsedEnv.TELEGRAM_CHAT_ID),
 
-   footballDataApiToken: parsedEnv.FOOTBALL_DATA_API_TOKEN,
-   manchesterUnitedTeamId: parsedEnv.MANCHESTER_UNITED_TEAM_ID,
+   footballDataApiToken: trimEnv(parsedEnv.FOOTBALL_DATA_API_TOKEN),
+   manchesterUnitedTeamId: trimEnv(parsedEnv.MANCHESTER_UNITED_TEAM_ID) ?? "66",
 
-   openaiApiKey: parsedEnv.OPENAI_API_KEY,
+   openaiApiKey: trimEnv(parsedEnv.OPENAI_API_KEY),
 
    enableCron: parsedEnv.ENABLE_CRON,
-   cronTime: parsedEnv.CRON_TIME,
+   cronTime: trimEnv(parsedEnv.CRON_TIME) ?? "0 8 * * *",
 
-   sendReportSecret: parsedEnv.SEND_REPORT_SECRET,
+   sendReportSecret: trimEnv(parsedEnv.SEND_REPORT_SECRET),
 
-   mongoDbUri: parsedEnv.MONGODB_URI,
-   mongoDbName: parsedEnv.MONGODB_DB_NAME,
+   mongoDbUri: trimEnv(parsedEnv.MONGODB_URI),
+   mongoDbName: trimEnv(parsedEnv.MONGODB_DB_NAME),
 };

@@ -1,6 +1,7 @@
 import cron from "node-cron";
 import { sendMorningReport } from "../services/reports/sendMorningReport";
 import { env } from "../config/env";
+import { formatErrorForLog } from "../utils/formatErrorForLog";
 
 let isRunning = false;
 
@@ -21,7 +22,7 @@ export function startMorningReportJob() {
             console.log("Morning report sent successfully");
             console.log(result.text);
          } catch (error) {
-            console.error("Morning report job failed:", error);
+            console.error("Morning report job failed:", formatErrorForLog(error));
          } finally {
             isRunning = false;
          }

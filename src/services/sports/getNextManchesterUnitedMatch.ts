@@ -1,5 +1,9 @@
 import axios from "axios";
+import https from "node:https";
 import { env } from "../../config/env";
+
+/** Prefer IPv4: on some hosts AAAA is broken and TLS to api.football-data.org never completes (`res: null`). */
+const footballDataHttpsAgent = new https.Agent({ family: 4 });
 
 export type TNextMatch = {
    opponent: string;
@@ -32,12 +36,25 @@ export async function getNextManchesterUnitedMatch(): Promise<TNextMatch> {
 
    const url = `https://api.football-data.org/v4/teams/${env.manchesterUnitedTeamId}/matches?status=SCHEDULED&limit=1`;
 
-   const response = await axios.get<TFootballDataResponse>(url, {
-      timeout: 15000,
-      headers: {
-         "X-Auth-Token": env.footballDataApiToken,
-      },
-   });
+   let response;
+   try {
+      response = await axios.get<TFootballDataResponse>(url, {
+         timeout: 15000,
+         httpsAgent: footballDataHttpsAgent,
+         headers: {
+            "X-Auth-Token": env.footballDataApiToken,
+         },
+      });
+   } catch (err) {
+      if (axios.isAxiosError(err)) {
+         const status = err.response?.status;
+         const data = err.response?.data;
+         const detail =
+            data !== undefined && typeof data === "object" && data !== null ? JSON.stringify(data) : err.message;
+         throw new Error(`Football-Data API failed (HTTP ${String(status)}): ${detail}`);
+      }
+      throw err;
+   }
 
    const match = response.data?.matches?.[0];
 
