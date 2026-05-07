@@ -11,10 +11,7 @@ export async function sendMorningReport() {
    const previousPosts = (await getBotMessages(env.telegramChatId || "", 10)).map((message) => message.message);
 
    const text = await generateMorningPost({
-      opponent: data.match.opponent,
-      matchDate: data.match.kyivDateTime,
-      competition: data.match.competition,
-      venue: data.match.venue,
+      muMatch: data.match,
       usdRate: data.currency.rate,
       rateDate: data.currency.date,
       obolonMatch: data.obolonMatch,

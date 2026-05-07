@@ -2,16 +2,14 @@ import OpenAI from "openai";
 import { env } from "../../config/env";
 import { TTapBeer } from "../beer/getTapBeerList";
 import { TNextObolonMatch } from "../sports/getObolonNextMatch";
+import { TNextMatch } from "../sports/getNextManchesterUnitedMatch";
 
 const client = new OpenAI({
    apiKey: env.openaiApiKey,
 });
 
 type TInput = {
-   opponent: string;
-   matchDate: string;
-   competition: string;
-   venue: "home" | "away";
+   muMatch: TNextMatch | null;
    usdRate: number;
    rateDate: string;
    f1RaceName: string;
@@ -29,7 +27,26 @@ export async function generateMorningPost(input: TInput) {
       throw new Error("OPENAI_API_KEY is not set");
    }
 
-   const { opponent, obolonMatch, matchDate, competition, venue, usdRate, rateDate, f1RaceName, f1RaceDate, f1RaceLocation, previousPosts = [], beers = [], isWeekend, weekday } = input;
+   const { muMatch, obolonMatch, usdRate, rateDate, f1RaceName, f1RaceDate, f1RaceLocation, previousPosts = [], beers = [], isWeekend, weekday } = input;
+
+   const muFootballRules = muMatch
+      ? `Матч Manchester United:
+- Якщо матч Manchester United сьогодні, обов'язково додай коротке побажання для фанатів
+- Можна дуже коротко й живо використати мотив із гімну:
+  Glory, glory Man United / As the Reds go marching on, on, on
+- Не цитуй гімн повністю щоразу
+- Якщо матч не сьогодні, просто коротко нагадай про гру
+- Не перевантажуй цей блок`
+      : `Матч Manchester United:
+- Дані про наступний матч Manchester United зараз недоступні — не вигадуй суперника, дату чи турнір і не згадуй конкретний розклад MU в тексті.`;
+
+   const muFootballData = muMatch
+      ? `- команда: Manchester United
+- суперник: ${muMatch.opponent}
+- дата і час: ${muMatch.utcDate}
+- турнір: ${muMatch.competition}
+- ${muMatch.venue === "home" ? "матч удома" : "матч на виїзді"}`
+      : `- Manchester United: дані про наступний матч недоступні — не додавай у пост вигаданих дат чи назв.`;
 
    const obolonFootballRules = obolonMatch
       ? `Матч Оболонь:
@@ -57,7 +74,7 @@ export async function generateMorningPost(input: TInput) {
 ТВОЯ РОЛЬ:
 Пиши як жива людина, яка щоранку кидає короткий, легкий і приємний допис у чат.
 Текст має звучати природно, невимушено й по-різному з дня в день.
-Не пиши сухо, шаблонно, канцелярськи або “як бот”.
+Не пиши сухо, шаблонно, канцелярськи або "як бот".
 
 ГОЛОВНА МЕТА:
 Кожен новий пост має бути схожий на свіжий окремий текст, а не на перефразування попереднього.
@@ -75,9 +92,9 @@ export async function generateMorningPost(input: TInput) {
 - Не використовуй хештеги
 - Не використовуй списки з цифрами
 - Не використовуй лапки без потреби
--Починай пункт про футбол з емодзі м'яча
--Починай пункт про формулу з емодзі боліда
--Починай пункт з курсом доллара з емодзі долара
+- Починай пункт про футбол з емодзі м'яча
+- Починай пункт про формулу з емодзі боліда
+- Починай пункт з курсом доллара з емодзі долара
 
 ВИМОГИ ДО РІЗНОМАНІТНОСТІ:
 - Не повторюй стиль, структуру, ритм і вступи з попередніх постів
@@ -91,7 +108,7 @@ export async function generateMorningPost(input: TInput) {
   6. одразу з пива на кранах
 - Іноді текст може бути більш бадьорий, іноді спокійний, іноді з легкою усмішкою
 - Уникай повторення тих самих слів у першому рядку
-- Уникай однакових зв’язок між рядками
+- Уникай однакових зв'язок між рядками
 - Не використовуй постійно одні й ті самі слова на кшталт:
   "друзі", "ну що", "доброго ранку", "настрій", "сьогодні маємо", "нагадуємо"
 - Якщо якийсь формат дуже схожий на попередні пости, свідомо обери інший
@@ -103,7 +120,7 @@ export async function generateMorningPost(input: TInput) {
 - По-людськи
 - Без офіційності
 - Без пафосу
-- Без “роботського” тону
+- Без "роботського" тону
 - Можна трохи розмовно, але природно
 
 ЩО ВКЛЮЧИТИ:
@@ -123,13 +140,7 @@ export async function generateMorningPost(input: TInput) {
 - Просто природно встав інформацію: 1 USD = ${usdRate} грн
 
 ФУТБОЛ:
-Матч Manchester United:
-- Якщо матч Manchester United сьогодні, обов’язково додай коротке побажання для фанатів
-- Можна дуже коротко й живо використати мотив із гімну:
-  Glory, glory Man United / As the Reds go marching on, on, on
-- Не цитуй гімн повністю щоразу
-- Якщо матч не сьогодні, просто коротко нагадай про гру
-- Не перевантажуй цей блок
+${muFootballRules}
 
 ${obolonFootballRules}
 
@@ -143,7 +154,7 @@ ${obolonFootballRules}
 - Не пиши дату
 - Вибери ОДНЕ випадкове зі списку
 - Напиши одне коротке рекламне речення про нього
-- Формулювання теж мають бути різними: іноді м’яке, іноді жваве, іноді з апетитним акцентом
+- Формулювання теж мають бути різними: іноді м'яке, іноді жваве, іноді з апетитним акцентом
 - Не повторюй однакові конструкції типу "сьогодні варто спробувати..."
 
 ЖАРТ / ФІНАЛЬНИЙ РЯДОК:
@@ -173,11 +184,7 @@ ${previousPosts.length ? previousPosts.map((p, i) => `${i + 1}. ${p}`).join("\n"
 - Сьогодні ${weekday}, ${isWeekend ? "це вихідний день" : "це робочий день"}.
 
 ⚽ Футбол:
-- команда: Manchester United
-- суперник: ${opponent}
-- дата і час: ${matchDate}
-- турнір: ${competition}
-- ${venue === "home" ? "матч удома" : "матч на виїзді"}
+${muFootballData}
 
 ${obolonFootballData}
 

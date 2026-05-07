@@ -19,20 +19,19 @@ async function fromSource<T>(label: string, fn: () => Promise<T>): Promise<T> {
 export async function buildMorningReport() {
    const [currency, match, f1Race, beers, obolonMatch] = await Promise.all([
       fromSource("NBU USD/UAH", getUsdToUahRate),
-      fromSource("Football-Data (MU)", getNextManchesterUnitedMatch),
+      getNextManchesterUnitedMatch(),
       fromSource("F1 next race", getNextF1Race),
       fromSource("Beer menu", getTapBeerList),
-      fromSource("Obolon fixtures", getObolonNextMatch),
+      getObolonNextMatch(),
    ]);
    const weekday = getWeekdayNameUk(new Date());
    const isWeekend = weekday === "Субота" || weekday === "Неділя";
 
    return {
       currency,
-      match: {
-         ...match,
-         kyivDateTime: formatKyivDateTime(match.utcDate),
-      },
+      match: match
+         ? { ...match, kyivDateTime: formatKyivDateTime(match.utcDate) }
+         : null,
       obolonMatch: obolonMatch
          ? { ...obolonMatch, kyivDateTime: formatKyivDateTime(obolonMatch.utcDate) }
          : null,
