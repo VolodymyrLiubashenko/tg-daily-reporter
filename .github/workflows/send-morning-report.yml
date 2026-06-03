@@ -1,8 +1,7 @@
 name: Send morning report
 
+# Расписание: cron-job.org (см. docs/external-cron.md). GitHub schedule убран из-за очереди на free runners.
 on:
-   schedule:
-      - cron: "5 7 * * *"
    workflow_dispatch:
 
 jobs:

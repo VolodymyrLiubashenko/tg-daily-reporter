@@ -1,11 +1,7 @@
 name: Send draw beer post
 
+# Расписание: cron-job.org (см. docs/external-cron.md).
 on:
-   schedule:
-      # Среда и суббота, 09:05 UTC (~12:05 MSK).
-      - cron: "5 8 * * 3"
-      - cron: "5 8 * * 5"
-      - cron: "5 8 * * 6"
    workflow_dispatch:
 
 jobs:
