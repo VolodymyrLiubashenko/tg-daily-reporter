@@ -1,9 +1,7 @@
 name: Send raffle result
 
+# Расписание: cron-job.org (см. docs/external-cron.md).
 on:
-   schedule:
-      # Пятница, 16:05 UTC (~19:05 MSK).
-      - cron: "5 15 * * 5"
    workflow_dispatch:
 
 jobs:
