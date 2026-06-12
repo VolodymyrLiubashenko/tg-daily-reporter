@@ -81,5 +81,4 @@
 2. **MongoDB:** Для вебхука, активності, розіграшу та відстеження повідомлень потрібне підключення до MongoDB (`MONGODB_URI`, `MONGODB_DB_NAME` за потреби).
 3. **Запуск:** `npm run dev` (розробка) або `npm run build` і `npm start` (продакшен).
 4. **Розклад на Render Free:** серверний cron не працює під час sleep; автозапуск — [cron-job.org](docs/external-cron.md) (POST на API з `x-cron-secret`). GitHub Actions — лише ручний запуск.
-
-Якщо ендпоінт залежить від зовнішніх API (футбол, курси, F1, OpenAI), перевірте відповідні токени та ключі в `.env`.
+5. **Фронтенд (Vue):** каталог [frontApp/](frontApp/) — окремий `npm install` / `npm run dev` (порт 5173); бекенд має бути запущений на порту з `PORT` (за замовчуванням 3000). Деталі в [frontApp/README.md](frontApp/README.md). від зовнішніх API (футбол, курси, F1, OpenAI), перевірте відповідні токени та ключі в `.env`.

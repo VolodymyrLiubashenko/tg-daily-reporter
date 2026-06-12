@@ -1,0 +1,10 @@
+/**
+ * Глобальні стилі застосунку.
+ * Підключено в `src/main.ts`.
+ */
+@import "./variables.scss";
+@import "./typography.scss";
+
+body {
+   background: var(--color-bg);
+}

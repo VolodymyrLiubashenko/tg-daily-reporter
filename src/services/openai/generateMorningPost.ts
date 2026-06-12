@@ -12,15 +12,19 @@ const client = new OpenAI({
 const FIFA_WORLD_CUP_2026_FIXTURES_URL =
    "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/scores-fixtures?country=UA&wtw-filter=ALL";
 
+type TF1RaceInput = {
+   raceName: string;
+   formattedDate: string;
+   location: string;
+};
+
 type TInput = {
    muMatch: TNextMatch | null;
    usdRate: number;
    rateDate: string;
    eurRate: number;
    eurRateDate: string;
-   f1RaceName: string;
-   f1RaceDate: string;
-   f1RaceLocation: string;
+   f1Race: TF1RaceInput | null;
    previousPosts?: string[];
    beers: TTapBeer[];
    isWeekend: boolean;
@@ -49,9 +53,7 @@ export async function generateMorningPost(input: TInput) {
       rateDate,
       eurRate,
       eurRateDate,
-      f1RaceName,
-      f1RaceDate,
-      f1RaceLocation,
+      f1Race,
       previousPosts = [],
       beers = [],
       isWeekend,
@@ -97,6 +99,20 @@ export async function generateMorningPost(input: TInput) {
 - ${obolonMatch.venue === "home" ? "матч удома" : "матч на виїзді"}`
       : `- Оболонь: дані про наступний матч недоступні — не додавай у пост вигаданих дат чи назв.`;
 
+   const f1Rules = f1Race
+      ? `ФОРМУЛА 1:
+- Згадай гонку коротко й природно
+- Без сухої подачі
+- Просто як частину ранкового дайджесту`
+      : `ФОРМУЛА 1:
+- Дані про наступну гонку Формули 1 зараз недоступні — не вигадуй назв гонок, дат чи трасс і не згадуй F1 у тексті.`;
+
+   const f1Data = f1Race
+      ? `- гонка: ${f1Race.raceName}
+- дата: ${f1Race.formattedDate}
+- місце: ${f1Race.location}`
+      : `- Формула 1: дані про наступну гонку недоступні — не додавай у пост вигаданих назв, дат чи локацій.`;
+
    const prompt = `
 Ти створюєш щоденний ранковий Telegram-пост українською мовою для чату.
 
@@ -125,7 +141,7 @@ export async function generateMorningPost(input: TInput) {
 - Не використовуй списки з цифрами
 - Не використовуй лапки без потреби
 - Починай пункт про футбол з емодзі м'яча
-- Починай пункт про формулу з емодзі боліда
+${f1Race ? "- Починай пункт про формулу з емодзі боліда" : "- Блок про Формулу 1 не додавай — даних немає"}
 - Валюти подавай двома окремими рядками: перший починай з емодзі долара 💵, другий — з емодзі євро 💶
 
 ВИМОГИ ДО РІЗНОМАНІТНОСТІ:
@@ -159,10 +175,10 @@ export async function generateMorningPost(input: TInput) {
 1. Короткий вступ або перший рядок у живому стилі
 2. Згадку про те, який сьогодні день: вихідний чи робочий
 3. Футбол (Manchester United, Оболонь, і коротке пояснення + посилання на розклад ЧС-2026 на FIFA з блоку ДАНІ)
-4. Формулу 1
-5. Валюти
-6. ${selectedBeer ? "Пиво на крані (конкретна назва надана в блоці ДАНІ — згадай лише її)" : "Блок про напій на кранах не додавай — даних немає"}
-7. Наприкінці — короткий жарт або тепла фраза
+${f1Race ? "4. Формулу 1" : ""}
+${f1Race ? "5" : "4"}. Валюти
+${f1Race ? "6" : "5"}. ${selectedBeer ? "Пиво на крані (конкретна назва надана в блоці ДАНІ — згадай лише її)" : "Блок про напій на кранах не додавай — даних немає"}
+${f1Race ? "7" : "6"}. Наприкінці — короткий жарт або тепла фраза
 
 ПРАВИЛА ДЛЯ БЛОКІВ:
 
@@ -184,10 +200,7 @@ ${obolonFootballRules}
 - Не вигадуй інших посилань і не замінюй це на сторонні сайти
 - Не стверджуй і не натякай, що збірна України бере участь у цьому чемпіонаті; не обіцяй її матчі на ЧС-2026 — це було б неправдою
 
-ФОРМУЛА 1:
-- Згадай гонку коротко й природно
-- Без сухої подачі
-- Просто як частину ранкового дайджесту
+${f1Rules}
 
 ${selectedBeer ? `ПИВО:
 - Не пиши слово "пиво"
@@ -232,10 +245,8 @@ ${obolonFootballData}
 Посилання на розклад і матчі ЧС-2026 на сайті FIFA (матчі та рахунки; параметр country=UA у URL — лише для відображення сайту, не про участь збірної):
 ${FIFA_WORLD_CUP_2026_FIXTURES_URL}
 
-🏎️ Формула 1:
-- гонка: ${f1RaceName}
-- дата: ${f1RaceDate}
-- місце: ${f1RaceLocation}
+${f1Race ? `🏎️ Формула 1:
+${f1Data}` : f1Data}
 
 Валюта:
 - У пості — два окремі рядки: 💵 … USD … і 💶 … EUR … (дати в пост не додавай)

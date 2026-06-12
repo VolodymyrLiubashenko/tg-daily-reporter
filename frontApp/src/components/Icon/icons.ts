@@ -1,0 +1,52 @@
+import {
+   Home,
+   Menu,
+   Settings,
+   User,
+   LogIn,
+   Bell,
+   Trophy,
+   ArrowRight,
+   Activity,
+   LogOut,
+   Copy,
+   X,
+   Lock,
+   Users,
+   Beer,
+   Calendar,
+   Clock,
+   MapPin,
+   CircleCheck,
+   Info,
+   Bot,
+} from "lucide-vue-next";
+
+import { Telegram } from "./custom";
+
+export const icons = {
+   home: Home,
+   menu: Menu,
+   settings: Settings,
+   user: User,
+   login: LogIn,
+   bell: Bell,
+   trophy: Trophy,
+   arrowRight: ArrowRight,
+   activity: Activity,
+   telegram: Telegram,
+   logout: LogOut,
+   copy: Copy,
+   close: X,
+   lock: Lock,
+   users: Users,
+   beer: Beer,
+   calendar: Calendar,
+   clock: Clock,
+   mapPin: MapPin,
+   circleCheck: CircleCheck,
+   info: Info,
+   bot: Bot,
+} as const;
+
+export type TIconName = keyof typeof icons;

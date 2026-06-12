@@ -17,9 +17,13 @@ export async function getMorningTextPreview(_req: Request, res: Response) {
       eurRate: data.eurCurrency.rate,
       eurRateDate: data.eurCurrency.date,
       previousPosts: previousPosts,
-      f1RaceName: data.f1Race.raceName,
-      f1RaceDate: data.f1Race.formattedDate,
-      f1RaceLocation: `${data.f1Race.circuitName}, ${data.f1Race.locality}, ${data.f1Race.country}`,
+      f1Race: data.f1Race
+         ? {
+              raceName: data.f1Race.raceName,
+              formattedDate: data.f1Race.formattedDate,
+              location: `${data.f1Race.circuitName}, ${data.f1Race.locality}, ${data.f1Race.country}`,
+           }
+         : null,
       beers: data.beers,
       isWeekend: data.isWeekend,
       weekday: data.weekday,

@@ -28,24 +28,40 @@ type TJolpicaResponse = {
    };
 };
 
-export async function getNextF1Race(): Promise<TF1NextRace> {
-   const url = "https://api.jolpi.ca/ergast/f1/current/next.json";
+export async function getNextF1Race(): Promise<TF1NextRace | null> {
+   try {
+      const url = "https://api.jolpi.ca/ergast/f1/current/next.json";
 
-   const response = await axios.get<TJolpicaResponse>(url, {
-      timeout: 15000,
-   });
+      const response = await axios.get<TJolpicaResponse>(url, {
+         timeout: 15000,
+      });
 
-   const race = response.data?.MRData?.RaceTable?.Races?.[0];
+      const race = response.data?.MRData?.RaceTable?.Races?.[0];
 
-   if (!race?.raceName || !race?.date || !race?.Circuit?.circuitName || !race?.Circuit?.Location?.locality || !race?.Circuit?.Location?.country) {
-      throw new Error("Failed to get next F1 race");
+      if (
+         !race?.raceName ||
+         !race?.date ||
+         !race?.Circuit?.circuitName ||
+         !race?.Circuit?.Location?.locality ||
+         !race?.Circuit?.Location?.country
+      ) {
+         return null;
+      }
+
+      return {
+         raceName: race.raceName,
+         circuitName: race.Circuit.circuitName,
+         locality: race.Circuit.Location.locality,
+         country: race.Circuit.Location.country,
+         date: race.date,
+      };
+   } catch (err) {
+      const detail = axios.isAxiosError(err)
+         ? `HTTP ${String(err.response?.status)}: ${JSON.stringify(err.response?.data ?? err.message)}`
+         : err instanceof Error
+           ? err.message
+           : String(err);
+      console.warn(`[getNextF1Race] jolpi API failed — ${detail}`);
+      return null;
    }
-
-   return {
-      raceName: race.raceName,
-      circuitName: race.Circuit.circuitName,
-      locality: race.Circuit.Location.locality,
-      country: race.Circuit.Location.country,
-      date: race.date,
-   };
 }
