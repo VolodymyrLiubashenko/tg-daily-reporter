@@ -8,14 +8,19 @@ type Props = {
    icon: TIconName;
    title: string;
    description: string;
-   linkText: string;
-   linkHref: string;
+   linkText?: string;
+   linkHref?: string;
 };
 
 const props = defineProps<Props>();
 
+const hasLink = computed(() => Boolean(props.linkText && props.linkHref));
+
 const isInternalLink = computed(
-   () => props.linkHref.startsWith("/") && !props.linkHref.startsWith("//"),
+   () =>
+      hasLink.value &&
+      props.linkHref!.startsWith("/") &&
+      !props.linkHref!.startsWith("//"),
 );
 </script>
 
@@ -29,12 +34,12 @@ const isInternalLink = computed(
          <h3 class="feature-card__title">{{ title }}</h3>
          <p class="feature-card__description">{{ description }}</p>
 
-         <RouterLink v-if="isInternalLink" :to="linkHref" class="feature-card__link">
+         <RouterLink v-if="hasLink && isInternalLink" :to="linkHref!" class="feature-card__link">
             <span>{{ linkText }}</span>
             <Icon name="arrowRight" :size="18" />
          </RouterLink>
          <a
-            v-else
+            v-else-if="hasLink"
             :href="linkHref"
             class="feature-card__link"
             target="_blank"

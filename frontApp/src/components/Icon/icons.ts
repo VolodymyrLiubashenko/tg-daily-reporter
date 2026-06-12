@@ -20,6 +20,9 @@ import {
    CircleCheck,
    Info,
    Bot,
+   Sun,
+   Gift,
+   Volleyball,
 } from "lucide-vue-next";
 
 import { Telegram } from "./custom";
@@ -47,6 +50,9 @@ export const icons = {
    circleCheck: CircleCheck,
    info: Info,
    bot: Bot,
+   sun: Sun,
+   gift: Gift,
+   volleyball: Volleyball,
 } as const;
 
 export type TIconName = keyof typeof icons;
