@@ -22,7 +22,7 @@ export async function buildMorningReport() {
       fromSource("NBU USD/UAH", getUsdToUahRate),
       fromSource("NBU EUR/UAH", getEurToUahRate),
       getNextManchesterUnitedMatch(),
-      fromSource("F1 next race", getNextF1Race),
+      getNextF1Race(),
       fromSource("Beer menu", getTapBeerList),
       getObolonNextMatch(),
    ]);
@@ -32,16 +32,14 @@ export async function buildMorningReport() {
    return {
       usdCurrency,
       eurCurrency,
-      match: match
-         ? { ...match, kyivDateTime: formatKyivDateTime(match.utcDate) }
+      match: match ? { ...match, utcDate: formatKyivDateTime(match.utcDate) } : null,
+      obolonMatch: obolonMatch ? { ...obolonMatch, kyivDateTime: formatKyivDateTime(obolonMatch.utcDate) } : null,
+      f1Race: f1Race
+         ? {
+              ...f1Race,
+              formattedDate: formatDateUk(f1Race.date),
+           }
          : null,
-      obolonMatch: obolonMatch
-         ? { ...obolonMatch, kyivDateTime: formatKyivDateTime(obolonMatch.utcDate) }
-         : null,
-      f1Race: {
-         ...f1Race,
-         formattedDate: formatDateUk(f1Race.date),
-      },
       beers,
       isWeekend,
       weekday,

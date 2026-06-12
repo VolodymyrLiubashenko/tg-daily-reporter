@@ -8,6 +8,10 @@ import activityRoutes from "./activity";
 import raffleRoutes from "./raffle";
 import sentDrawBeerPostRoutes from "./sentDrawBeerPost";
 import sendRaffleResultRoutes from "./sendRaffleResult";
+import authRoutes from "./auth";
+import manchesterUnitedNextMatchRoutes from "./manchesterUnitedNextMatch";
+import obolonNextMatchRoutes from "./obolonNextMatch";
+import f1NextRaceRoutes from "./f1NextRace";
 
 const router = Router();
 
@@ -17,6 +21,14 @@ router.get("/health", (_req, res) => {
       message: "Server is running",
    });
 });
+
+router.use("/auth", authRoutes);
+
+router.use("/sports/manchester-united", manchesterUnitedNextMatchRoutes);
+
+router.use("/sports/obolon", obolonNextMatchRoutes);
+
+router.use("/sports/f1", f1NextRaceRoutes);
 
 router.use("/telegram", telegramRoutes);
 router.use("/telegram", telegramWebhookRoutes);

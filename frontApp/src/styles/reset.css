@@ -1,0 +1,92 @@
+/**
+ * Скидання / «обнулення» базових стилів браузера.
+ * Підключайте першим у `main.ts`, потім шрифти та `main.css`.
+ *
+ * Не задавайте color / font-family на селекторі `*` — інакше дочірні
+ * елементи (наприклад span у кнопці) отримують власний color і не
+ * успадковують колір від батьківського .btn.
+ */
+
+*,
+*::before,
+*::after {
+   box-sizing: border-box;
+}
+
+* {
+   margin: 0;
+}
+
+html {
+   -webkit-text-size-adjust: 100%;
+   text-size-adjust: 100%;
+}
+
+body {
+   min-height: 100dvh;
+   line-height: 1.5;
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+   font-family: var(--font-family);
+   color: var(--color-text-primary);
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+   display: block;
+   max-width: 100%;
+   height: auto;
+}
+
+input,
+button,
+textarea,
+select {
+   font: inherit;
+   color: inherit;
+}
+
+button {
+   cursor: pointer;
+   background: none;
+   border: none;
+   padding: 0;
+}
+
+a {
+   color: inherit;
+   text-decoration: none;
+}
+
+ul,
+ol {
+   list-style: none;
+   padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+   font-size: inherit;
+   font-weight: inherit;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+   overflow-wrap: break-word;
+}
+
+#app {
+   isolation: isolate;
+}

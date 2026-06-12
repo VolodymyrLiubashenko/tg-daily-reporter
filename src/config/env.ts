@@ -23,6 +23,12 @@ const envSchema = z.object({
 
    MONGODB_URI: z.string().optional(),
    MONGODB_DB_NAME: z.string().optional(),
+
+   GOOGLE_CLIENT_ID: z.string().optional(),
+   GOOGLE_CLIENT_SECRET: z.string().optional(),
+   GOOGLE_CALLBACK_URL: z.string().optional(),
+   FRONTEND_URL: z.string().optional(),
+   SESSION_SECRET: z.string().optional(),
 });
 
 const parsedEnv = envSchema.parse(process.env);
@@ -52,4 +58,10 @@ export const env = {
 
    mongoDbUri: trimEnv(parsedEnv.MONGODB_URI),
    mongoDbName: trimEnv(parsedEnv.MONGODB_DB_NAME),
+
+   googleClientId: trimEnv(parsedEnv.GOOGLE_CLIENT_ID),
+   googleClientSecret: trimEnv(parsedEnv.GOOGLE_CLIENT_SECRET),
+   googleCallbackUrl: trimEnv(parsedEnv.GOOGLE_CALLBACK_URL),
+   frontendUrl: trimEnv(parsedEnv.FRONTEND_URL),
+   sessionSecret: trimEnv(parsedEnv.SESSION_SECRET),
 };
