@@ -21,6 +21,14 @@ export function formatKyivRaceDate(date: string) {
    return parseKyivDate(`${date}T12:00:00`).format("D MMMM YYYY, dddd");
 }
 
+export function formatDateUk(date: string | Date) {
+   return new Intl.DateTimeFormat("uk-UA", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+   }).format(new Date(date));
+}
+
 export function formatKyivMatchTime(date: string | Date) {
    const kickoff = parseKyivDate(date);
 

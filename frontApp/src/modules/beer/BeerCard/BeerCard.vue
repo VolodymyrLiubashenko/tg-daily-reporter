@@ -16,6 +16,16 @@ const priceLabel = computed(() => {
 
    return props.beer.prices.map(({ volume, price }) => `${volume} — ${price}`).join(" · ");
 });
+
+const compactPriceLabel = computed(() => {
+   if (!props.beer.prices.length) {
+      return priceLabel.value;
+   }
+
+   return props.beer.prices
+      .map(({ volume, price }) => `${volume} - ${price.replace(/,00(?=\s*₴)/, "")}`)
+      .join(" / ");
+});
 </script>
 
 <template>
@@ -50,7 +60,9 @@ const priceLabel = computed(() => {
 
          <p class="beer-card__prices">
             <Icon name="tag" :size="14" />
-            <span>Ціни: {{ priceLabel }}</span>
+            <span class="beer-card__prices-label">Ціни:</span>
+            <span class="beer-card__prices-value beer-card__prices-value--desktop">{{ priceLabel }}</span>
+            <span class="beer-card__prices-value beer-card__prices-value--mobile">{{ compactPriceLabel }}</span>
          </p>
 
          <a
@@ -207,6 +219,40 @@ const priceLabel = computed(() => {
    font-size: var(--font-size-sm);
    font-weight: 500;
    line-height: 1.35;
+
+   @include mq-raw("(max-width: 1280px)") {
+      gap: 3px;
+      padding: 6px;
+      font-size: var(--font-size-xs);
+      line-height: 1.2;
+      white-space: nowrap;
+   }
+}
+
+.beer-card__prices :deep(svg) {
+   flex-shrink: 0;
+}
+
+.beer-card__prices-label {
+   flex-shrink: 0;
+}
+
+.beer-card__prices-value {
+   min-width: 0;
+}
+
+.beer-card__prices-value--mobile {
+   display: none;
+
+   @include mq-raw("(max-width: 1280px)") {
+      display: inline;
+   }
+}
+
+.beer-card__prices-value--desktop {
+   @include mq-raw("(max-width: 1280px)") {
+      display: none;
+   }
 }
 
 .beer-card__link {

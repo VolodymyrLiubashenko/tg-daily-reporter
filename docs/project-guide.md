@@ -111,7 +111,7 @@ flowchart TB
 | [sendMorning.ts](../src/routes/sendMorning.ts) | `POST /send-morning-test` → повна відправка ранкового звіту (cron / тест). |
 | [telegram.ts](../src/routes/telegram.ts) | `GET /test` → тестове повідомлення в Telegram. |
 | [telegramWebhook.ts](../src/routes/telegramWebhook.ts) | `POST /webhook` → прийом оновлень від Bot API. |
-| [activity.ts](../src/routes/activity.ts) | `GET /active-users` → список активних користувачів за період. |
+| [activity.ts](../src/routes/activity.ts) | `GET /active-users` → список активних користувачів за період; `GET /users` → усі збережені користувачі чату. |
 | [raffle.ts](../src/routes/raffle.ts) | `GET /pick-weekly-winner` → вибір переможця (без поста розіграшу в чат). |
 | [sendRaffleResult.ts](../src/routes/sendRaffleResult.ts) | `POST /send-raffle-result` → повний сценарій поста з результатом розіграшу. |
 | [sentDrawBeerPost.ts](../src/routes/sentDrawBeerPost.ts) | `POST /send-post` під префіксом `draw-beer` → пост про розливне. |
@@ -185,6 +185,7 @@ flowchart TB
 | Файл | Призначення |
 |------|-------------|
 | [getActiveUsersForPeriod.ts](../src/services/activity/getActiveUsersForPeriod.ts) | Агрегація активних за діапазоном дат. |
+| [getChatUsers.ts](../src/services/activity/getChatUsers.ts) | Список усіх збережених користувачів чату, відсортований за останньою активністю. |
 | [trackChatMessage.ts](../src/services/activity/trackChatMessage.ts) | Запис активності з webhook. |
 
 #### `services/raffle/`
@@ -257,6 +258,7 @@ flowchart TB
 | GET | `/api/telegram/test` | — | Тест Telegram (потрібні токени в env). |
 | POST | `/api/telegram/webhook` | — | Webhook Bot API (`Content-Type: application/json`). |
 | GET | `/api/activity/active-users` | — | Активні користувачі (query `chatId` опційно). |
+| GET | `/api/activity/users` | — | Усі збережені користувачі чату (query `chatId` опційно). |
 | GET | `/api/raffle/pick-weekly-winner` | — | Вибір переможця без поста в чат. |
 | POST | `/api/raffle/send-raffle-result` | `x-cron-secret` | Пост з результатом розіграшу. |
 | POST | `/api/draw-beer/send-post` | `x-cron-secret` | Пост про розливне. |
