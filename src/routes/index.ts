@@ -12,6 +12,7 @@ import authRoutes from "./auth";
 import manchesterUnitedNextMatchRoutes from "./manchesterUnitedNextMatch";
 import obolonNextMatchRoutes from "./obolonNextMatch";
 import f1NextRaceRoutes from "./f1NextRace";
+import fullBeerInfoRoutes from "./fullBeerInfo";
 
 const router = Router();
 
@@ -29,6 +30,8 @@ router.use("/sports/manchester-united", manchesterUnitedNextMatchRoutes);
 router.use("/sports/obolon", obolonNextMatchRoutes);
 
 router.use("/sports/f1", f1NextRaceRoutes);
+
+router.use("/beer", fullBeerInfoRoutes);
 
 router.use("/telegram", telegramRoutes);
 router.use("/telegram", telegramWebhookRoutes);
