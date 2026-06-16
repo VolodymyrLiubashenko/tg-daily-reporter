@@ -2,14 +2,24 @@
 import Button from "@components/Button/Button.vue";
 import Icon from "@components/Icon/Icon.vue";
 import type { TChatUser } from "@/declarations/chatUser";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useGetRaffleUsers } from "../composables/useGetRaffleUsers";
 
 const TOP_USERS_LIMIT = 5;
 
 const { chatUsers, isLoadingChatUsers, isChatUsersError } = useGetRaffleUsers();
 
-const topUsers = computed(() => chatUsers.value.slice(0, TOP_USERS_LIMIT));
+const isShowAllUsers = ref(false);
+
+const isCanToggleUsers = computed(() => chatUsers.value.length > TOP_USERS_LIMIT);
+
+const visibleUsers = computed(() =>
+   isShowAllUsers.value ? chatUsers.value : chatUsers.value.slice(0, TOP_USERS_LIMIT),
+);
+
+const toggleUsersButtonText = computed(() =>
+   isShowAllUsers.value ? "Згорнути" : "Переглянути всі",
+);
 
 function getUserDisplayName(user: TChatUser) {
    if (user.username) {
@@ -30,7 +40,14 @@ function getUserDisplayName(user: TChatUser) {
             <h2 class="raffle-top-users__title">Топ учасників</h2>
          </div>
 
-         <Button variant="outline">Переглянути всі</Button>
+         <Button
+            v-if="isCanToggleUsers"
+            variant="outline"
+            :aria-expanded="isShowAllUsers"
+            @click="isShowAllUsers = !isShowAllUsers"
+         >
+            {{ toggleUsersButtonText }}
+         </Button>
       </header>
 
       <div v-if="isLoadingChatUsers" class="raffle-top-users__state">Завантажуємо учасників...</div>
@@ -39,12 +56,12 @@ function getUserDisplayName(user: TChatUser) {
          Не вдалося завантажити учасників.
       </div>
 
-      <div v-else-if="!topUsers.length" class="raffle-top-users__state">
+      <div v-else-if="!visibleUsers.length" class="raffle-top-users__state">
          Учасників поки немає.
       </div>
 
       <ol v-else class="raffle-top-users__list">
-         <li v-for="(user, index) in topUsers" :key="user.telegramUserId" class="raffle-top-users__item">
+         <li v-for="(user, index) in visibleUsers" :key="user.telegramUserId" class="raffle-top-users__item">
             <span class="raffle-top-users__rank" :class="`raffle-top-users__rank--${index + 1}`">
                {{ index + 1 }}
             </span>

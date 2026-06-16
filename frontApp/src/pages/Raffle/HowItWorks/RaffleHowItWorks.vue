@@ -38,7 +38,7 @@ const raffleSteps: RaffleStep[] = [
 </script>
 
 <template>
-   <section class="raffle-how">
+   <section id="how-it-works" class="raffle-how">
       <h2 class="raffle-how__title">Як це працює?</h2>
 
       <div class="raffle-how__grid">

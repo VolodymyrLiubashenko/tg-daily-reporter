@@ -2,6 +2,28 @@
 import Button from "@components/Button/Button.vue";
 import Icon from "@components/Icon/Icon.vue";
 import RaffleStats from "../Stats/RaffleStats.vue";
+
+const HOW_IT_WORKS_SECTION_ID = "how-it-works";
+const SCROLL_GAP = 16;
+
+function scrollToHowItWorks(event: MouseEvent) {
+   event.preventDefault();
+
+   const section = document.getElementById(HOW_IT_WORKS_SECTION_ID);
+   const header = document.querySelector<HTMLElement>(".header");
+
+   if (!section) {
+      return;
+   }
+
+   const headerHeight = header?.offsetHeight ?? 0;
+   const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+
+   window.scrollTo({
+      top: Math.max(sectionTop - headerHeight - SCROLL_GAP, 0),
+      behavior: "smooth",
+   });
+}
 </script>
 
 <template>
@@ -20,7 +42,14 @@ import RaffleStats from "../Stats/RaffleStats.vue";
             </p>
 
             <div class="raffle-banner__actions">
-               <Button icon="gift" icon-position="start" :icon-size="16">Як це працює?</Button>
+               <Button
+                  icon="gift"
+                  icon-position="start"
+                  :icon-size="16"
+                  @click="scrollToHowItWorks"
+               >
+                  Як це працює?
+               </Button>
 
                <span class="raffle-banner__schedule">
                   <Icon name="calendar" :size="16" />

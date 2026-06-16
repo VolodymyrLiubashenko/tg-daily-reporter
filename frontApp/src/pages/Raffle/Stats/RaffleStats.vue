@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import FeatureCard from "@components/FeatureCard/FeatureCard.vue";
 import type { TIconName } from "@components/Icon/icons";
+import type { TChatUser } from "@/declarations/chatUser";
+import { computed } from "vue";
+import { useGetRaffleUsers } from "../composables/useGetRaffleUsers";
 
 type RaffleStat = {
    icon: TIconName;
@@ -8,28 +11,68 @@ type RaffleStat = {
    value: string;
 };
 
-const raffleStats: RaffleStat[] = [
+const { chatUsers, isLoadingChatUsers, isChatUsersError } = useGetRaffleUsers();
+
+const numberFormatter = new Intl.NumberFormat("uk-UA");
+
+const totalMessages = computed(() =>
+   chatUsers.value.reduce((messagesSum, user) => messagesSum + user.messageCountTotal, 0),
+);
+
+const mostActiveUser = computed(() => chatUsers.value[0] ?? null);
+
+const raffleStats = computed<RaffleStat[]>(() => [
    {
       icon: "users",
       label: "Учасників",
-      value: "1 248",
+      value: formatStatValue(chatUsers.value.length),
    },
    {
       icon: "telegram",
       label: "Усього повідомлень",
-      value: "24 587",
+      value: formatStatValue(totalMessages.value),
    },
    {
       icon: "user",
       label: "Найактивніший учасник",
-      value: "@serhii_ty",
+      value: formatMostActiveUser(mostActiveUser.value),
    },
    {
       icon: "gift",
       label: "Приз цього тижня",
-      value: "Сертифікат",
+      value: "Бокал пива",
    },
-];
+]);
+
+function formatStatValue(value: number) {
+   if (isLoadingChatUsers.value) {
+      return "...";
+   }
+
+   if (isChatUsersError.value) {
+      return "-";
+   }
+
+   return numberFormatter.format(value);
+}
+
+function formatMostActiveUser(user: TChatUser | null) {
+   if (isLoadingChatUsers.value) {
+      return "...";
+   }
+
+   if (isChatUsersError.value || !user) {
+      return "-";
+   }
+
+   if (user.username) {
+      return `@${user.username}`;
+   }
+
+   const fullName = [user.firstName, user.lastName].filter(Boolean).join(" ");
+
+   return fullName || `ID ${user.telegramUserId}`;
+}
 </script>
 
 <template>
@@ -75,5 +118,12 @@ const raffleStats: RaffleStat[] = [
       min-height: 64px;
       padding: var(--space-3);
    }
+}
+
+.raffle-banner__stat-card :deep(.feature-card__title) {
+   max-width: 100%;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
 }
 </style>
