@@ -1,11 +1,16 @@
 <script setup lang="ts">
 import Icon from "@components/Icon/Icon.vue";
+import Pagination from "@components/Pagination/Pagination.vue";
 import type { TWeeklyWinner } from "@/declarations/weeklyWinner";
 import { formatDateUk, parseKyivDate } from "@/utils/date/day";
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 import { useGetRaffleUsers } from "../composables/useGetRaffleUsers";
 
+const WINNERS_PER_PAGE = 5;
+
 const { chatUsers, weeklyWinners, isLoadingWeeklyWinners, isWeeklyWinnersError } = useGetRaffleUsers();
+
+const currentWinnersPage = ref(1);
 
 const messageCountByUserId = computed(
    () =>
@@ -16,6 +21,18 @@ const messageCountByUserId = computed(
          ]),
       ),
 );
+
+const paginatedWinners = computed(() => {
+   const startIndex = (currentWinnersPage.value - 1) * WINNERS_PER_PAGE;
+
+   return weeklyWinners.value.slice(startIndex, startIndex + WINNERS_PER_PAGE);
+});
+
+const isShowPagination = computed(() => weeklyWinners.value.length > WINNERS_PER_PAGE);
+
+watch(weeklyWinners, () => {
+   currentWinnersPage.value = 1;
+});
 
 function getWinnerDisplayName(winner: TWeeklyWinner) {
    const fullName = [winner.firstName].filter(Boolean).join(" ");
@@ -79,7 +96,7 @@ function formatWinnerTime(date: string) {
                </thead>
 
                <tbody>
-                  <tr v-for="winner in weeklyWinners" :key="winner.id">
+                  <tr v-for="winner in paginatedWinners" :key="winner.id">
                      <td>
                         <span class="raffle-winners__date">
                            <Icon name="calendar" :size="18" />
@@ -117,7 +134,7 @@ function formatWinnerTime(date: string) {
          </div>
 
          <ul class="raffle-winners__cards" aria-label="Усі переможці розіграшу">
-            <li v-for="winner in weeklyWinners" :key="winner.id" class="raffle-winners__card">
+            <li v-for="winner in paginatedWinners" :key="winner.id" class="raffle-winners__card">
                <dl class="raffle-winners__card-grid">
                   <div class="raffle-winners__card-item">
                      <dt>
@@ -168,6 +185,16 @@ function formatWinnerTime(date: string) {
                </div>
             </li>
          </ul>
+
+         <Pagination
+            v-if="isShowPagination"
+            v-model="currentWinnersPage"
+            class="raffle-winners__pagination"
+            :total-items="weeklyWinners.length"
+            :items-per-page="WINNERS_PER_PAGE"
+            :max-pages-shown="5"
+            aria-label="Пагінація переможців розіграшу"
+         />
       </template>
    </section>
 </template>
@@ -350,6 +377,14 @@ function formatWinnerTime(date: string) {
       margin: 0;
       padding: 0;
       list-style: none;
+   }
+}
+
+.raffle-winners__pagination {
+   margin-top: var(--space-4);
+
+   @include mq-mobile {
+      margin-top: var(--space-3);
    }
 }
 

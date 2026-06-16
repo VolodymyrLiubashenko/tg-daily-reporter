@@ -25,6 +25,8 @@ import {
    Volleyball,
    ExternalLink,
    Tag,
+   ChevronLeft,
+   ChevronRight,
 } from "lucide-vue-next";
 
 import { Telegram } from "./custom";
@@ -57,6 +59,8 @@ export const icons = {
    volleyball: Volleyball,
    externalLink: ExternalLink,
    tag: Tag,
+   chevronLeft: ChevronLeft,
+   chevronRight: ChevronRight,
 } as const;
 
 export type TIconName = keyof typeof icons;
