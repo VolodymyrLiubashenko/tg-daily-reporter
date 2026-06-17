@@ -35,7 +35,19 @@ router.post("/logout", (req, res, next) => {
          return next(error);
       }
 
-      res.json({ ok: true });
+      req.session.destroy((sessionError) => {
+         if (sessionError) {
+            return next(sessionError);
+         }
+
+         res.clearCookie("connect.sid", {
+            httpOnly: true,
+            sameSite: env.nodeEnv === "production" ? "none" : "lax",
+            secure: env.nodeEnv === "production",
+         });
+
+         res.json({ ok: true });
+      });
    });
 });
 

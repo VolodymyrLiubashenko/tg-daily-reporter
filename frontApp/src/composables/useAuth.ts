@@ -26,7 +26,13 @@ export const useAuth = (): IUseAuth => {
    const { mutate: logout } = useMutation({
       mutationFn: () => authApi.logout(),
       onSuccess: () => {
-         queryClient.removeQueries({ queryKey: ["user", "me", "auth"] });
+         queryClient.setQueryData(["user", "me", "auth"], {
+            data: {
+               ok: true,
+               user: null,
+            },
+         });
+         queryClient.invalidateQueries({ queryKey: ["user", "me", "auth"] });
          router.push(getHomePath());
       },
    });
