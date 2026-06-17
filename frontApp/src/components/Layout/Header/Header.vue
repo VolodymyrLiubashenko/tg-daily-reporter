@@ -1,14 +1,21 @@
 <script setup lang="ts">
-import { getHomePath, getAboutPath, getBeerPath, getRafflePath } from "@router/paths";
+import { computed } from "vue";
+import { getHomePath, getAboutPath, getAdminPath, getBeerPath, getRafflePath } from "@router/paths";
 import Icon from "@components/Icon/Icon.vue";
 import Button from "@components/Button/Button.vue";
 import { useMediaQueries } from "@/composables/useMediaQuery";
 import { useAuth } from "@/composables/useAuth";
+import { ADMIN_EMAILS } from "@/config";
 import UserMenu from "./UserMenu/UserMenu.vue";
 import MobileMenu from "./MobileMenu/MobileMenu.vue";
 
-const { isAuthenticated, loginWithGoogle } = useAuth();
+const { user, isAuthenticated, loginWithGoogle } = useAuth();
 const { isMobile } = useMediaQueries();
+const isAdmin = computed(() => {
+   const userEmail = user.value?.email?.toLowerCase();
+
+   return Boolean(userEmail && ADMIN_EMAILS.includes(userEmail));
+});
 
 const handleLoginWithGoogle = () => {
    loginWithGoogle();
@@ -30,6 +37,7 @@ const handleLoginWithGoogle = () => {
             <RouterLink :to="getRafflePath()">Розіграш</RouterLink>
             <RouterLink :to="getBeerPath()">Пиво</RouterLink>
             <RouterLink :to="getAboutPath()">Про бота</RouterLink>
+            <RouterLink v-if="isAdmin" :to="getAdminPath()">Адмін</RouterLink>
          </div>
 
          <div v-if="!isMobile && !isAuthenticated" class="header__actions">
@@ -43,7 +51,7 @@ const handleLoginWithGoogle = () => {
          </div>
 
          <div v-if="isMobile" class="header__menu">
-            <MobileMenu :is-authenticated="isAuthenticated" />
+            <MobileMenu :is-authenticated="isAuthenticated" :is-admin="isAdmin" />
          </div>
       </div>
    </header>

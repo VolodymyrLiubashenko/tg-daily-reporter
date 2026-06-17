@@ -3,7 +3,7 @@ import Popup from "@components/Popup/Popup.vue";
 import { ref } from "vue";
 import { useAuth } from "@/composables/useAuth";
 import Button from "@components/Button/Button.vue";
-import { getHomePath, getAboutPath, getBeerPath, getRafflePath } from "@router/paths";
+import { getHomePath, getAboutPath, getAdminPath, getBeerPath, getRafflePath } from "@router/paths";
 import Icon from "@components/Icon/Icon.vue";
 
 const { loginWithGoogle, logout } = useAuth();
@@ -24,6 +24,7 @@ const handleLogout = () => {
 
 type Props = {
    isAuthenticated: boolean;
+   isAdmin: boolean;
 };
 const props = defineProps<Props>();
 </script>
@@ -50,6 +51,9 @@ const props = defineProps<Props>();
                </li>
                <li class="mobile-menu__description-item">
                   <RouterLink :to="getAboutPath()">Про бота</RouterLink>
+               </li>
+               <li v-if="props.isAdmin" class="mobile-menu__description-item">
+                  <RouterLink :to="getAdminPath()">Адмін</RouterLink>
                </li>
             </ul>
          </div>
