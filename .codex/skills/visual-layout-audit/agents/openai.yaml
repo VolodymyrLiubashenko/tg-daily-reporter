@@ -1,0 +1,10 @@
+interface:
+  display_name: "Visual Layout Audit"
+  short_description: "Check page layout with Chrome DevTools"
+  default_prompt: "Use $visual-layout-audit to verify the current page layout against the design and responsive breakpoints."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "chrome-devtools"
+      description: "Chrome DevTools MCP server for screenshots, console, network, DOM, viewport, and responsive layout checks."
+      transport: "stdio"
