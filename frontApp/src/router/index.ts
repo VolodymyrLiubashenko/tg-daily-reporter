@@ -7,13 +7,7 @@ import Beer from "@pages/Beer/Beer.vue";
 import Admin from "@pages/Admin/Admin.vue";
 import { ADMIN_EMAILS } from "@/config";
 import { authApi } from "@/api/auth/authApi";
-import {
-   getAboutPath,
-   getAdminPath,
-   getBeerPath,
-   getHomePath,
-   getRafflePath,
-} from "@router/paths";
+import { getAboutPath, getAdminPath, getBeerPath, getHomePath, getRafflePath } from "@router/paths";
 
 export const router = createRouter({
    history: createWebHistory(),

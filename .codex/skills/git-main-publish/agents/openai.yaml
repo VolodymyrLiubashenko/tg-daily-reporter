@@ -1,0 +1,4 @@
+interface:
+  display_name: "Git Main Publish"
+  short_description: "Commit and push repository changes to main"
+  default_prompt: "Use $git-main-publish to commit my current repo changes and push them to main."

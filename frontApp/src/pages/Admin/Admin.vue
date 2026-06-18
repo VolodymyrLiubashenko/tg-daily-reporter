@@ -1,32 +1,19 @@
-<script setup lang="ts">
-import Footer from "@components/Layout/Footer/Footer.vue";
-import Header from "@components/Layout/Header/Header.vue";
-import Main from "@components/Layout/Main/Main.vue";
-</script>
-
 <template>
-   <Header />
-   <Main>
-      <section class="admin">
-         <div class="admin__panel">
-            <p class="admin__eyebrow">Закрита зона</p>
-            <h1 class="admin__title">Адмін-панель</h1>
-            <p class="admin__lead">
-               Доступ до цієї сторінки має тільки власник застосунку. Майбутні адмін-інструменти
-               з'являться тут.
-            </p>
-         </div>
+   <section class="admin">
+      <div class="admin__panel">
+         <p class="admin__eyebrow">Закрита зона</p>
+         <h1 class="admin__title">Адмін-панель</h1>
+         <p class="admin__lead">
+            Доступ до цієї сторінки має тільки власник застосунку. Майбутні адмін-інструменти
+            з'являться тут.
+         </p>
+      </div>
 
-         <div class="admin__placeholder">
-            <h2 class="admin__placeholder-title">Місце для інструментів</h2>
-            <p>
-               Тут можна буде додати керування постами, перегляд даних або ручні дії для бота.
-            </p>
-         </div>
-      </section>
-
-      <Footer />
-   </Main>
+      <div class="admin__placeholder">
+         <h2 class="admin__placeholder-title">Місце для інструментів</h2>
+         <p>Тут можна буде додати керування постами, перегляд даних або ручні дії для бота.</p>
+      </div>
+   </section>
 </template>
 
 <style scoped lang="scss">

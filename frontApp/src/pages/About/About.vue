@@ -1,99 +1,86 @@
-<script setup lang="ts">
-import Main from "@components/Layout/Main/Main.vue";
-import Header from "@components/Layout/Header/Header.vue";
-import Footer from "@components/Layout/Footer/Footer.vue";
-</script>
-
 <template>
-   <Header />
-   <Main>
-      <article class="about">
-         <h1 class="about__title">Про бота TG Daily Reporter</h1>
+   <article class="about">
+      <h1 class="about__title">Про бота TG Daily Reporter</h1>
 
-         <p class="about__lead">
-            <strong>TG Daily Reporter</strong> — це Telegram-бот для вашого чату. Він не відповідає на
-            кожне повідомлення, а за розкладом публікує корисні та веселі пости: новини дня, спорт,
-            пиво та результати розіграшів.
+      <p class="about__lead">
+         <strong>TG Daily Reporter</strong> — це Telegram-бот для вашого чату. Він не відповідає на
+         кожне повідомлення, а за розкладом публікує корисні та веселі пости: новини дня, спорт,
+         пиво та результати розіграшів.
+      </p>
+
+      <section class="about__section">
+         <h2 class="about__heading">Ранковий звіт</h2>
+         <p>
+            <strong>Щодня близько 10:05</strong> (за київським часом) бот надсилає в чат один
+            великий пост. У ньому зазвичай є:
          </p>
+         <ul class="about__list">
+            <li>курс <strong>долара</strong> та <strong>євро</strong>;</li>
+            <li>інформація про <strong>наступний матч Manchester United</strong>;</li>
+            <li>інформація про <strong>наступний матч «Оболоні»</strong>;</li>
+            <li>коли відбудеться <strong>наступна гонка Формули-1</strong>;</li>
+            <li>що зараз є в <strong>розливному</strong>;</li>
+            <li>короткий текст «живою» мовою — бот підлаштовує стиль під ваш чат.</li>
+         </ul>
+      </section>
 
-         <section class="about__section">
-            <h2 class="about__heading">Ранковий звіт</h2>
-            <p>
-               <strong>Щодня близько 10:05</strong> (за київським часом) бот надсилає в чат один
-               великий пост. У ньому зазвичай є:
-            </p>
-            <ul class="about__list">
-               <li>курс <strong>долара</strong> та <strong>євро</strong>;</li>
-               <li>інформація про <strong>наступний матч Manchester United</strong>;</li>
-               <li>інформація про <strong>наступний матч «Оболоні»</strong>;</li>
-               <li>коли відбудеться <strong>наступна гонка Формули-1</strong>;</li>
-               <li>що зараз є в <strong>розливному</strong>;</li>
-               <li>
-                  короткий текст «живою» мовою — бот підлаштовує стиль під ваш чат.
-               </li>
-            </ul>
-         </section>
+      <section class="about__section">
+         <h2 class="about__heading">Пости про розливне</h2>
+         <p>
+            <strong>Середа, п’ятниця та субота близько 11:05</strong> бот нагадує про розливне пиво.
+            У пості може з’явитися згадка тих, хто був активний у чаті протягом тижня.
+         </p>
+      </section>
 
-         <section class="about__section">
-            <h2 class="about__heading">Пости про розливне</h2>
-            <p>
-               <strong>Середа, п’ятниця та субота близько 11:05</strong> бот нагадує про розливне
-               пиво. У пості може з’явитися згадка тих, хто був активний у чаті протягом тижня.
-            </p>
-         </section>
+      <section class="about__section">
+         <h2 class="about__heading">Тижневий розіграш</h2>
+         <p><strong>У п’ятницю близько 18:05</strong> бот підводить підсумки тижня:</p>
+         <ul class="about__list">
+            <li>рахує, хто писав у чаті;</li>
+            <li>випадковим чином обирає <strong>переможця</strong>;</li>
+            <li>публікує результат прямо в чаті.</li>
+         </ul>
+      </section>
 
-         <section class="about__section">
-            <h2 class="about__heading">Тижневий розіграш</h2>
-            <p><strong>У п’ятницю близько 18:05</strong> бот підводить підсумки тижня:</p>
-            <ul class="about__list">
-               <li>рахує, хто писав у чаті;</li>
-               <li>випадковим чином обирає <strong>переможця</strong>;</li>
-               <li>публікує результат прямо в чаті.</li>
-            </ul>
-         </section>
+      <section class="about__section">
+         <h2 class="about__heading">Як бот «пам’ятає» активність</h2>
+         <p>
+            Щоб вести розіграш і згадувати активних учасників, бот
+            <strong>запам’ятовує повідомлення</strong> людей у чаті. Це потрібно лише для обліку
+            активності — бот не читає приватні переписки і не відповідає на кожне ваше слово.
+         </p>
+      </section>
 
-         <section class="about__section">
-            <h2 class="about__heading">Як бот «пам’ятає» активність</h2>
-            <p>
-               Щоб вести розіграш і згадувати активних учасників, бот
-               <strong>запам’ятовує повідомлення</strong> людей у чаті. Це потрібно лише для обліку
-               активності — бот не читає приватні переписки і не відповідає на кожне ваше слово.
-            </p>
-         </section>
-
-         <section class="about__section">
-            <h2 class="about__heading">Розклад (за київським часом)</h2>
-            <table class="about__schedule">
-               <thead>
-                  <tr>
-                     <th scope="col">Що</th>
-                     <th scope="col">Коли</th>
-                  </tr>
-               </thead>
-               <tbody>
-                  <tr>
-                     <td>Ранковий звіт</td>
-                     <td>Щодня, ~10:05</td>
-                  </tr>
-                  <tr>
-                     <td>Пост про розливне</td>
-                     <td>Середа, п’ятниця, субота, ~11:05</td>
-                  </tr>
-                  <tr>
-                     <td>Тижневий розіграш</td>
-                     <td>П’ятниця, ~18:05</td>
-                  </tr>
-               </tbody>
-            </table>
-            <p class="about__note">
-               Час може трохи змінюватися через затримку сервера — пост з’явиться протягом
-               хвилини-двох після запланованого моменту.
-            </p>
-         </section>
-      </article>
-
-      <Footer />
-   </Main>
+      <section class="about__section">
+         <h2 class="about__heading">Розклад (за київським часом)</h2>
+         <table class="about__schedule">
+            <thead>
+               <tr>
+                  <th scope="col">Що</th>
+                  <th scope="col">Коли</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr>
+                  <td>Ранковий звіт</td>
+                  <td>Щодня, ~10:05</td>
+               </tr>
+               <tr>
+                  <td>Пост про розливне</td>
+                  <td>Середа, п’ятниця, субота, ~11:05</td>
+               </tr>
+               <tr>
+                  <td>Тижневий розіграш</td>
+                  <td>П’ятниця, ~18:05</td>
+               </tr>
+            </tbody>
+         </table>
+         <p class="about__note">
+            Час може трохи змінюватися через затримку сервера — пост з’явиться протягом хвилини-двох
+            після запланованого моменту.
+         </p>
+      </section>
+   </article>
 </template>
 
 <style scoped lang="scss">
