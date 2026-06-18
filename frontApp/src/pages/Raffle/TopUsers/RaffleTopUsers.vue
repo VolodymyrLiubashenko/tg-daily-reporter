@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Button from "@components/Button/Button.vue";
 import Icon from "@components/Icon/Icon.vue";
+import { VITE_API_URL } from "@/config";
 import type { TChatUser } from "@/declarations/chatUser";
 import { computed, ref } from "vue";
 import { useGetRaffleUsers } from "../composables/useGetRaffleUsers";
@@ -10,15 +11,16 @@ const TOP_USERS_LIMIT = 5;
 const { chatUsers, isLoadingChatUsers, isChatUsersError } = useGetRaffleUsers();
 
 const isShowAllUsers = ref(false);
+const failedAvatarUserIds = ref(new Set<string>());
 
 const isCanToggleUsers = computed(() => chatUsers.value.length > TOP_USERS_LIMIT);
 
 const visibleUsers = computed(() =>
-   isShowAllUsers.value ? chatUsers.value : chatUsers.value.slice(0, TOP_USERS_LIMIT),
+   isShowAllUsers.value ? chatUsers.value : chatUsers.value.slice(0, TOP_USERS_LIMIT)
 );
 
 const toggleUsersButtonText = computed(() =>
-   isShowAllUsers.value ? "Згорнути" : "Переглянути всі",
+   isShowAllUsers.value ? "Згорнути" : "Переглянути всі"
 );
 
 function getUserDisplayName(user: TChatUser) {
@@ -29,6 +31,25 @@ function getUserDisplayName(user: TChatUser) {
    const fullName = [user.firstName, user.lastName].filter(Boolean).join(" ");
 
    return fullName || `ID ${user.telegramUserId}`;
+}
+
+function getUserInitial(user: TChatUser) {
+   return getUserDisplayName(user).replace("@", "").trim().charAt(0).toUpperCase() || "?";
+}
+
+function getUserAvatarSrc(user: TChatUser) {
+   const apiBaseUrl = VITE_API_URL || "/api";
+   const normalizedApiBaseUrl = apiBaseUrl.replace(/\/$/, "");
+
+   return `${normalizedApiBaseUrl}/telegram/users/${user.telegramUserId}/avatar`;
+}
+
+function shouldShowUserAvatar(user: TChatUser) {
+   return !failedAvatarUserIds.value.has(user.telegramUserId);
+}
+
+function handleUserAvatarError(user: TChatUser) {
+   failedAvatarUserIds.value = new Set(failedAvatarUserIds.value).add(user.telegramUserId);
 }
 </script>
 
@@ -61,9 +82,26 @@ function getUserDisplayName(user: TChatUser) {
       </div>
 
       <ol v-else class="raffle-top-users__list">
-         <li v-for="(user, index) in visibleUsers" :key="user.telegramUserId" class="raffle-top-users__item">
+         <li
+            v-for="(user, index) in visibleUsers"
+            :key="user.telegramUserId"
+            class="raffle-top-users__item"
+         >
             <span class="raffle-top-users__rank" :class="`raffle-top-users__rank--${index + 1}`">
                {{ index + 1 }}
+            </span>
+
+            <span class="raffle-top-users__avatar" aria-hidden="true">
+               <img
+                  v-if="shouldShowUserAvatar(user)"
+                  :src="getUserAvatarSrc(user)"
+                  :alt="getUserDisplayName(user)"
+                  loading="lazy"
+                  @error="handleUserAvatarError(user)"
+               />
+               <span v-else class="raffle-top-users__avatar-fallback">
+                  {{ getUserInitial(user) }}
+               </span>
             </span>
 
             <span class="raffle-top-users__name">{{ getUserDisplayName(user) }}</span>
@@ -138,7 +176,7 @@ function getUserDisplayName(user: TChatUser) {
 
 .raffle-top-users__item {
    display: grid;
-   grid-template-columns: 32px minmax(0, 1fr) auto;
+   grid-template-columns: 32px 32px minmax(0, 1fr) auto;
    align-items: center;
    gap: var(--space-3);
    min-height: 44px;
@@ -147,6 +185,36 @@ function getUserDisplayName(user: TChatUser) {
    &:last-child {
       border-bottom: 0;
    }
+}
+
+.raffle-top-users__avatar,
+.raffle-top-users__avatar-fallback {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   width: 28px;
+   height: 28px;
+   border-radius: 50%;
+}
+
+.raffle-top-users__avatar {
+   overflow: hidden;
+   background: var(--color-surface-secondary);
+   border: 1px solid var(--color-border-light);
+
+   img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+   }
+}
+
+.raffle-top-users__avatar-fallback {
+   color: var(--color-primary-hover);
+   background: var(--color-success-bg);
+   font-size: var(--font-size-xs);
+   font-weight: 800;
+   line-height: 1;
 }
 
 .raffle-top-users__rank {

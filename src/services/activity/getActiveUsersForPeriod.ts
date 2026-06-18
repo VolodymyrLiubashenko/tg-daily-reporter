@@ -46,6 +46,9 @@ export async function getActiveUsersForPeriod(chatId: string, startDate: Date, e
          username: user?.username ?? null,
          firstName: user?.firstName ?? null,
          lastName: user?.lastName ?? null,
+         avatarFileId: user?.avatarFileId ?? null,
+         avatarFileUniqueId: user?.avatarFileUniqueId ?? null,
+         avatarFilePath: user?.avatarFilePath ?? null,
       };
    });
 }

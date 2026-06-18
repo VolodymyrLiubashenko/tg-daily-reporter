@@ -24,6 +24,18 @@ const chatUserSchema = new Schema(
          type: String,
          default: null,
       },
+      avatarFileId: {
+         type: String,
+         default: null,
+      },
+      avatarFileUniqueId: {
+         type: String,
+         default: null,
+      },
+      avatarFilePath: {
+         type: String,
+         default: null,
+      },
       isBot: {
          type: Boolean,
          default: false,
