@@ -145,7 +145,7 @@ const highlights: { icon: TIconName; label: string }[] = [
    max-width: 620px;
    height: auto;
    object-fit: contain;
-   filter: drop-shadow(0 18px 32px rgba(15, 23, 42, 0.12));
+   filter: drop-shadow(var(--shadow-media));
 
    @include mq-mobile {
       max-width: unset;

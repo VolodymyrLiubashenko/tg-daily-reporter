@@ -124,6 +124,16 @@ npm run format:check
 - `variables.scss` — CSS variables: цвета, spacing, radius, typography.
 - `typography.scss` — базовые стили заголовков и текста.
 
+Theme rules:
+
+- `frontApp/src/styles/variables.scss` is the source of truth for theme tokens.
+- Light theme values live in `:root`; dark theme values are applied automatically with `@media (prefers-color-scheme: dark)` until the user chooses a theme.
+- Manual theme selection is stored in `localStorage` and applied through `data-theme="light|dark"` on the `html` element.
+- For visual changes, use existing `var(--color-...)`, `var(--shadow-...)`, `var(--space-...)`, and `var(--radius-...)` tokens first.
+- If a new color/shadow is needed, add a semantic token to `variables.scss` with both light and dark values.
+- Do not add component-local hex/rgb colors unless the color belongs to a fixed image, logo, or SVG brand asset.
+- For color, card, overlay, badge, shadow, or border changes, verify both light and dark appearances.
+
 В компонентах используется `<style scoped lang="scss">`.
 Для responsive-стилей используйте `@styles/mixins/mediaQuery.scss`.
 
@@ -146,6 +156,7 @@ npm run format:check
 - Сохранять строгую типизацию: `tsconfig.app.json` включает `strict`, `noUnusedLocals`, `noUnusedParameters`.
 - Для API-данных сначала описывать типы, затем метод API, затем UI/composable.
 - Для визуальных правок использовать существующие CSS variables и SCSS mixins.
+- Для темизации не хардкодить цвета в компонентах; добавлять semantic token в `frontApp/src/styles/variables.scss` и задавать значения для light/dark.
 - Для новых изображений класть ассеты в `frontApp/public/images/`, если они должны открываться по публичному URL.
 - После существенных изменений запускать минимум `npm run typecheck` и `npm run lint` в `frontApp/`.
 

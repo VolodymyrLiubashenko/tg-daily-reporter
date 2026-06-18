@@ -164,18 +164,18 @@ function getUserDisplayName(user: TChatUser) {
 }
 
 .raffle-top-users__rank--1 {
-   color: #92400e;
-   background: #fef3c7;
+   color: var(--color-medal-gold-text);
+   background: var(--color-medal-gold-bg);
 }
 
 .raffle-top-users__rank--2 {
-   color: #475569;
-   background: #e2e8f0;
+   color: var(--color-medal-silver-text);
+   background: var(--color-medal-silver-bg);
 }
 
 .raffle-top-users__rank--3 {
-   color: #9a3412;
-   background: #fed7aa;
+   color: var(--color-medal-bronze-text);
+   background: var(--color-medal-bronze-bg);
 }
 
 .raffle-top-users__name {

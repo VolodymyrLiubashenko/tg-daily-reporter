@@ -1,19 +1,26 @@
 :root {
+   color-scheme: light;
+
    /* Brand */
    --color-primary: #22c55e;
    --color-primary-hover: #16a34a;
    --color-primary-light: #dcfce7;
+   --color-primary-soft: #f0fdf4;
 
    /* Backgrounds */
    --color-bg: #f8faf9;
    --color-surface: #ffffff;
    --color-surface-secondary: #f4f7f5;
+   --color-surface-elevated: #ffffff;
+   --color-surface-inverse: #0f172a;
+   --color-overlay: rgba(15, 23, 42, 0.48);
 
    /* Text */
    --color-text-primary: #0f172a;
    --color-text-secondary: #64748b;
    --color-text-muted: #94a3b8;
    --color-text-white: #ffffff;
+   --color-text-success: #166534;
 
    /* Borders */
    --color-border: #e2e8f0;
@@ -24,11 +31,22 @@
    --color-success-bg: #ecfdf5;
    --color-warning: #f59e0b;
    --color-danger: #ef4444;
+   --color-danger-hover: #dc2626;
+
+   /* Accents */
+   --color-medal-gold-text: #92400e;
+   --color-medal-gold-bg: #fef3c7;
+   --color-medal-silver-text: #475569;
+   --color-medal-silver-bg: #e2e8f0;
+   --color-medal-bronze-text: #9a3412;
+   --color-medal-bronze-bg: #fed7aa;
+   --gradient-callout: linear-gradient(90deg, var(--color-success-bg), var(--color-surface));
 
    /* Shadows */
    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
    --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
    --shadow-lg: 0 16px 40px rgba(15, 23, 42, 0.12);
+   --shadow-media: 0 18px 32px rgba(15, 23, 42, 0.12);
 
    /* Radius */
    --radius-sm: 8px;
@@ -55,4 +73,69 @@
    --space-6: 32px;
    --space-7: 48px;
    --space-8: 64px;
+}
+
+@mixin dark-theme {
+   color-scheme: dark;
+
+   /* Brand */
+   --color-primary: #4ade80;
+   --color-primary-hover: #86efac;
+   --color-primary-light: #123c27;
+   --color-primary-soft: #0f2f21;
+
+   /* Backgrounds */
+   --color-bg: #09110d;
+   --color-surface: #111b16;
+   --color-surface-secondary: #17241d;
+   --color-surface-elevated: #1b2a22;
+   --color-surface-inverse: #020617;
+   --color-overlay: rgba(2, 6, 23, 0.7);
+
+   /* Text */
+   --color-text-primary: #e5f2e9;
+   --color-text-secondary: #a9b8af;
+   --color-text-muted: #748279;
+   --color-text-white: #ffffff;
+   --color-text-success: #bbf7d0;
+
+   /* Borders */
+   --color-border: #26382e;
+   --color-border-light: #1e3026;
+
+   /* Status */
+   --color-success: #4ade80;
+   --color-success-bg: #10291d;
+   --color-warning: #fbbf24;
+   --color-danger: #f87171;
+   --color-danger-hover: #fca5a5;
+
+   /* Accents */
+   --color-medal-gold-text: #fde68a;
+   --color-medal-gold-bg: #463411;
+   --color-medal-silver-text: #cbd5e1;
+   --color-medal-silver-bg: #263241;
+   --color-medal-bronze-text: #fdba74;
+   --color-medal-bronze-bg: #452412;
+   --gradient-callout: linear-gradient(90deg, #10291d, var(--color-surface-elevated));
+
+   /* Shadows */
+   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+   --shadow-md: 0 10px 28px rgba(0, 0, 0, 0.34);
+   --shadow-lg: 0 18px 48px rgba(0, 0, 0, 0.42);
+   --shadow-media: 0 18px 36px rgba(0, 0, 0, 0.32);
+}
+
+:root[data-theme="light"] {
+   color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+   @include dark-theme;
+}
+
+@media (prefers-color-scheme: dark) {
+   :root:not([data-theme]) {
+      @include dark-theme;
+   }
 }

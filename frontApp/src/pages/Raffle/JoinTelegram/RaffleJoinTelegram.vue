@@ -39,7 +39,7 @@ import { TELEGRAM_BOT_URL } from "@/config";
    gap: var(--space-4);
    margin: 0 var(--space-4) var(--space-6);
    padding: var(--space-4);
-   background: linear-gradient(90deg, var(--color-success-bg), var(--color-surface));
+   background: var(--gradient-callout);
    border: 1px solid var(--color-primary-light);
    border-radius: var(--radius-md);
    box-shadow: var(--shadow-sm);

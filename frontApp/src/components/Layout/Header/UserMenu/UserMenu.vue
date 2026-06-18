@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Button from "@components/Button/Button.vue";
+import ThemeToggle from "@components/Layout/ThemeToggle/ThemeToggle.vue";
 import { useAuth } from "@/composables/useAuth";
 import { onMounted, onUnmounted, ref } from "vue";
 
@@ -84,6 +85,9 @@ onUnmounted(() => {
                </div>
             </div>
             <ul class="user-menu__dropdown-list">
+               <li class="user-menu__dropdown-item user-menu__dropdown-item--theme">
+                  <ThemeToggle />
+               </li>
                <li class="user-menu__dropdown-item user-menu__dropdown-item--logout">
                   <Button variant="pure" icon="logout" :icon-size="24" @click="logout"
                      >Logout</Button
@@ -138,6 +142,11 @@ onUnmounted(() => {
    border-radius: var(--radius-md);
    box-shadow: var(--shadow-lg);
    z-index: 1000;
+}
+
+.user-menu__dropdown-item--theme {
+   display: flex;
+   justify-content: flex-start;
 }
 
 .user-menu-dropdown-enter-active,

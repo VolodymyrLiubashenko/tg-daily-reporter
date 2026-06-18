@@ -5,12 +5,14 @@ import Icon from "@components/Icon/Icon.vue";
 import Button from "@components/Button/Button.vue";
 import { useMediaQueries } from "@/composables/useMediaQuery";
 import { useAuth } from "@/composables/useAuth";
+import { useTheme } from "@/composables/useTheme";
 import { ADMIN_EMAILS } from "@/config";
 import UserMenu from "./UserMenu/UserMenu.vue";
 import MobileMenu from "./MobileMenu/MobileMenu.vue";
 
 const { user, isAuthenticated, loginWithGoogle } = useAuth();
 const { isMobile } = useMediaQueries();
+useTheme();
 const isAdmin = computed(() => {
    const userEmail = user.value?.email?.toLowerCase();
 

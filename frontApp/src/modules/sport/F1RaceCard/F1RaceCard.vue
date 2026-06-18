@@ -113,7 +113,7 @@ const detailRows = computed(() => {
    position: relative;
    aspect-ratio: 16 / 9;
    overflow: hidden;
-   background: #0f172a;
+   background: var(--color-surface-inverse);
 }
 
 .f1-race-card__banner-image {
@@ -258,7 +258,7 @@ const detailRows = computed(() => {
 
 .f1-race-card__notice--info {
    margin-top: auto;
-   color: #166534;
+   color: var(--color-text-success);
    background: var(--color-primary-light);
 
    .f1-race-card__notice-icon {

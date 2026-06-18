@@ -98,7 +98,7 @@ const isInternalLink = computed(
    font-size: var(--font-size-md);
    font-weight: 700;
    line-height: 1.3;
-   color: #166534;
+   color: var(--color-text-success);
 }
 
 .feature-card__description {

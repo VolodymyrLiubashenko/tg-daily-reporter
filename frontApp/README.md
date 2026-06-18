@@ -56,3 +56,15 @@ npm run format:check  # перевірка без змін
 ```
 
 Конфіг ESLint: `eslint.config.js`. Prettier: `.prettierrc.json`, ігнори — `.prettierignore`.
+
+## Theme and dark mode
+
+The frontend uses CSS custom properties from `src/styles/variables.scss` as the single source of truth for colors, shadows, spacing, radii, and typography. Light theme values live in `:root`; dark theme values are applied automatically through `@media (prefers-color-scheme: dark)` until the user chooses a theme. Manual selection is stored in `localStorage` and applied through `data-theme="light|dark"` on the `html` element.
+
+When changing UI styles:
+
+- prefer existing `var(--color-...)`, `var(--shadow-...)`, `var(--space-...)`, and `var(--radius-...)` tokens;
+- add a semantic token in `variables.scss` before introducing a new hardcoded color;
+- keep both light and dark values for every new color/shadow token;
+- avoid component-local hex/rgb colors except for fixed brand assets or image/SVG artwork;
+- check the changed screen in both light and dark system themes when the change affects colors, cards, overlays, badges, shadows, or borders.

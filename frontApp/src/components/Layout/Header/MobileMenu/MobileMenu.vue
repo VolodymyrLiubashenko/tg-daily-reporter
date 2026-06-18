@@ -5,6 +5,7 @@ import { useAuth } from "@/composables/useAuth";
 import Button from "@components/Button/Button.vue";
 import { getHomePath, getAboutPath, getAdminPath, getBeerPath, getRafflePath } from "@router/paths";
 import Icon from "@components/Icon/Icon.vue";
+import UserMenu from "../UserMenu/UserMenu.vue";
 
 const { loginWithGoogle, logout } = useAuth();
 
@@ -36,8 +37,11 @@ const props = defineProps<Props>();
       <template #description>
          <div class="mobile-menu__description">
             <div class="mobile-menu__logo">
-               <Icon name="telegram" :size="48" />
-               <span class="mobile-menu__logo-text">TG Daily Reporter</span>
+               <div class="mobile-menu__logo-brand">
+                  <Icon name="telegram" :size="48" />
+                  <span class="mobile-menu__logo-text">TG Daily Reporter</span>
+               </div>
+               <UserMenu v-if="props.isAuthenticated" />
             </div>
             <ul class="mobile-menu__description-list">
                <li class="mobile-menu__description-item">
@@ -83,7 +87,21 @@ const props = defineProps<Props>();
    &__logo {
       display: flex;
       align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      padding-right: var(--space-7);
+
+      :deep(.user-menu__trigger) {
+         width: 36px;
+         height: 36px;
+      }
+   }
+
+   &__logo-brand {
+      display: flex;
+      align-items: center;
       gap: var(--space-2);
+      min-width: 0;
    }
 
    &__logo-text {
