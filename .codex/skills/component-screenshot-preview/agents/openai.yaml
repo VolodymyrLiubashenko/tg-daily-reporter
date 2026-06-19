@@ -1,0 +1,10 @@
+interface:
+  display_name: "Component Screenshot Preview"
+  short_description: "Quick one-screenshot component preview"
+  default_prompt: "Use $component-screenshot-preview to style this frontApp component with a temporary Home page preview and one screenshot."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "chrome-devtools"
+      description: "Chrome DevTools MCP server for opening the local Vite app and taking one component preview screenshot."
+      transport: "stdio"

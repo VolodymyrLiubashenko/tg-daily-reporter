@@ -99,6 +99,12 @@ npm run format:check
 
 ## API
 
+Required request pattern:
+
+- All frontend HTTP requests, including mutations, must be controlled through `@tanstack/vue-query` composables.
+- Components should call page/domain hooks such as `useGet...` or `useSend...`, not API methods directly.
+- When adding an endpoint, add typed API methods in `src/api/<domain>/`, wrap them in a composable with `useQuery` or `useMutation`, then use that composable in UI.
+
 Общий axios-клиент находится в `src/api/client.ts`.
 
 Текущий паттерн:
@@ -109,7 +115,7 @@ npm run format:check
 - Для запросов с кешированием используется `@tanstack/vue-query`.
 
 При добавлении нового endpoint лучше не вызывать `axios` прямо из компонента.
-Добавляйте метод в доменный API-модуль, типизируйте ответ и вызывайте его из composable или страницы.
+Добавляйте метод в доменный API-модуль, типизируйте ответ, затем оборачивайте его в composable с `useQuery`/`useMutation` и вызывайте этот composable в UI.
 
 ## Стили
 

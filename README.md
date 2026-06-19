@@ -27,6 +27,8 @@
 | Метод | Шлях | Опис |
 |--------|------|------|
 | `GET` | `/api/telegram/test` | Тестове відправлення повідомлення в Telegram (текст на кшталт підтвердження з’єднання). Потрібні налаштовані `TELEGRAM_BOT_TOKEN` та цільовий чат. |
+| `POST` | `/api/telegram/admin/send-message` | Відправляє довільний текст у `TELEGRAM_CHAT_ID` від імені бота. Потрібна Google-сесія користувача, email якого є в backend env `ADMIN_EMAILS`. Тіло: `{ "text": "..." }`. |
+| `POST` | `/api/telegram/admin/edit-message` | Редагує написаний адміном текст через OpenAI і повертає `editedText`, але не відправляє його в Telegram. Потрібна Google-сесія та email у `ADMIN_EMAILS`. Тіло: `{ "text": "..." }`. |
 | `POST` | `/api/telegram/webhook` | Вебхук для оновлень від Telegram Bot API. Тіло — JSON оновлення (`update`). Якщо є `message` з `chat.id`, `from.id` та `message_id`, повідомлення зберігається для обліку активності. Відповідь: `{ ok: true }`. |
 
 **Заголовки для `POST /webhook`:** `Content-Type: application/json`.

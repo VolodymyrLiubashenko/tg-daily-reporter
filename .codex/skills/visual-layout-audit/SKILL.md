@@ -1,6 +1,6 @@
 ---
 name: visual-layout-audit
-description: Use when Codex needs to verify frontend page layout, responsive behavior, visual regressions, or design-match quality in this project using Chrome DevTools MCP. Trigger for requests that mention checking a page against a mockup/design, responsive layout, mobile/tablet/desktop behavior, screenshots, console/network issues affecting UI, overflow, spacing, alignment, typography, or visual QA for frontApp Vue pages.
+description: Use only when the user explicitly asks for a full visual layout audit, responsive breakpoint check, design/mockup comparison, or visual QA across page layouts in `frontApp/`. Do not use automatically for ordinary component creation or small style fixes; use component-screenshot-preview for quick one-screenshot component checks.
 ---
 
 # Visual Layout Audit
@@ -8,7 +8,7 @@ description: Use when Codex needs to verify frontend page layout, responsive beh
 ## Overview
 
 Use Chrome DevTools MCP as the primary visual verification tool for `frontApp/`.
-Do not rely only on code inspection when the user asks whether a page looks correct.
+Use this skill only after an explicit user request for full visual audit/responsive QA. For ordinary component creation or small styling tasks, prefer the lightweight `component-screenshot-preview` workflow.
 
 ## Setup Checks
 

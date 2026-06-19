@@ -10,6 +10,7 @@ const envSchema = z.object({
    // Telegram
    TELEGRAM_BOT_TOKEN: z.string().optional(),
    TELEGRAM_CHAT_ID: z.string().optional(),
+   ADMIN_EMAILS: z.string().optional(),
 
    OPENAI_API_KEY: z.string().optional(),
 
@@ -42,12 +43,22 @@ function trimEnv(value: string | undefined): string | undefined {
    return t === "" ? undefined : t;
 }
 
+function parseEmailList(value: string | undefined): string[] {
+   return (
+      trimEnv(value)
+         ?.split(",")
+         .map((email) => email.trim().toLowerCase())
+         .filter(Boolean) ?? []
+   );
+}
+
 export const env = {
    port: parsedEnv.PORT,
    nodeEnv: parsedEnv.NODE_ENV,
 
    telegramBotToken: trimEnv(parsedEnv.TELEGRAM_BOT_TOKEN),
    telegramChatId: trimEnv(parsedEnv.TELEGRAM_CHAT_ID),
+   adminEmails: parseEmailList(parsedEnv.ADMIN_EMAILS),
 
    openaiApiKey: trimEnv(parsedEnv.OPENAI_API_KEY),
 

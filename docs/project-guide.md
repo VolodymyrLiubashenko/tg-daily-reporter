@@ -109,7 +109,7 @@ flowchart TB
 | [reports.ts](../src/routes/reports.ts) | `GET /morning-preview` → прев’ю даних ранкового звіту без OpenAI. |
 | [morningText.ts](../src/routes/morningText.ts) | `GET /morning-text-preview` → дані + генерація тексту OpenAI, без відправки в Telegram. |
 | [sendMorning.ts](../src/routes/sendMorning.ts) | `POST /send-morning-test` → повна відправка ранкового звіту (cron / тест). |
-| [telegram.ts](../src/routes/telegram.ts) | `GET /test` → тестове повідомлення в Telegram. |
+| [telegram.ts](../src/routes/telegram.ts) | `GET /test` → тестове повідомлення в Telegram; `POST /admin/send-message` → адмінська відправка довільного повідомлення ботом у `TELEGRAM_CHAT_ID`; `POST /admin/edit-message` → AI-редагування адмінського тексту без відправки в Telegram. |
 | [telegramWebhook.ts](../src/routes/telegramWebhook.ts) | `POST /webhook` → прийом оновлень від Bot API. |
 | [activity.ts](../src/routes/activity.ts) | `GET /active-users` → список активних користувачів за період; `GET /users` → усі збережені користувачі чату. |
 | [raffle.ts](../src/routes/raffle.ts) | `GET /pick-weekly-winner` → вибір переможця (без поста розіграшу в чат). |
@@ -125,7 +125,7 @@ flowchart TB
 | [sendMorningController.ts](../src/controllers/sendMorningController.ts) | `sendMorningTest` — перевірка `x-cron-secret` vs `SEND_REPORT_SECRET`, `sendMorningReport`, `trackBotMessage`. |
 | [sendDrawBeerPostController.ts](../src/controllers/sendDrawBeerPostController.ts) | Розливне: секрет, активні користувачі за період, генерація, Telegram. |
 | [sendRaffleResultController.ts](../src/controllers/sendRaffleResultController.ts) | Результат розіграшу: секрет, період, переможець, leaderboard, OpenAI, Telegram. |
-| [telegramController.ts](../src/controllers/telegramController.ts) | Тест відправки в Telegram. |
+| [telegramController.ts](../src/controllers/telegramController.ts) | Тест відправки в Telegram; адмінська відправка повідомлення через `sendMessageByAdmin`; AI-редагування адмінського тексту через `editAdminTelegramMessage`. |
 | [telegramWebhookController.ts](../src/controllers/telegramWebhookController.ts) | Розбір `update`, збереження повідомлень / активності. |
 | [activityController.ts](../src/controllers/activityController.ts) | HTTP для активних користувачів. |
 | [raffleController.ts](../src/controllers/raffleController.ts) | HTTP для `pick-weekly-winner`. |
@@ -147,6 +147,7 @@ flowchart TB
 | [generateMorningPost.ts](../src/services/openai/generateMorningPost.ts) | Промпт і виклик OpenAI для ранкового поста. |
 | [generateDrawBeerPost.ts](../src/services/openai/generateDrawBeerPost.ts) | Текст поста про розливне. |
 | [generateRaffleWinnerPost.ts](../src/services/openai/generateRaffleWinnerPost.ts) | Текст поста з результатом розіграшу. |
+| [editAdminTelegramMessage.ts](../src/services/openai/editAdminTelegramMessage.ts) | Легке AI-редагування вже написаного адміном Telegram-тексту без генерації нового поста з нуля. |
 
 #### `services/currency/`
 
@@ -179,6 +180,7 @@ flowchart TB
 | Файл | Призначення |
 |------|-------------|
 | [sendMessage.ts](../src/services/telegram/sendMessage.ts) | Відправка повідомлення через Bot API. |
+| [sendMessageByAdmin.ts](../src/services/telegram/sendMessageByAdmin.ts) | Відправка довільного адмінського повідомлення через Bot API без запису в `BotMessage`. |
 
 #### `services/activity/`
 
@@ -256,6 +258,8 @@ flowchart TB
 | GET | `/api/reports/morning-text-preview` | — | Дані + текст OpenAI, без Telegram. |
 | POST | `/api/reports/send-morning-test` | Заголовок `x-cron-secret` = `SEND_REPORT_SECRET` | Відправка ранкового звіту в Telegram. |
 | GET | `/api/telegram/test` | — | Тест Telegram (потрібні токени в env). |
+| POST | `/api/telegram/admin/send-message` | Google session + email у `ADMIN_EMAILS` | Відправка довільного повідомлення від імені бота у `TELEGRAM_CHAT_ID`. |
+| POST | `/api/telegram/admin/edit-message` | Google session + email у `ADMIN_EMAILS` | AI-редагування адмінського тексту; повертає `editedText` і нічого не відправляє в Telegram. |
 | POST | `/api/telegram/webhook` | — | Webhook Bot API (`Content-Type: application/json`). |
 | GET | `/api/activity/active-users` | — | Активні користувачі (query `chatId` опційно). |
 | GET | `/api/activity/users` | — | Усі збережені користувачі чату (query `chatId` опційно). |
@@ -282,6 +286,7 @@ flowchart TB
 | `NODE_ENV` | `development` \| `production` \| `test`. |
 | `TELEGRAM_BOT_TOKEN` | Токен бота. |
 | `TELEGRAM_CHAT_ID` | ID чату для постів і обліку. |
+| `ADMIN_EMAILS` | Кома-розділений allowlist email-ів, яким backend дозволяє адмінські дії, наприклад відправку повідомлення ботом. |
 | `OPENAI_API_KEY` | Ключ OpenAI. |
 | `ENABLE_CRON` | Рядок `"true"` / інше — увімкнути `node-cron` на сервері (на Render Free зазвичай `false`). |
 | `CRON_TIME` | Вираз cron для ранкового job (за замовчуванням `0 8 * * *`), timezone у коді — `Europe/Kyiv`. |

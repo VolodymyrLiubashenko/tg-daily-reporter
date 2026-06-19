@@ -8,3 +8,5 @@ dependencies:
       value: "chrome-devtools"
       description: "Chrome DevTools MCP server for screenshots, console, network, DOM, viewport, and responsive layout checks."
       transport: "stdio"
+policy:
+  allow_implicit_invocation: false
