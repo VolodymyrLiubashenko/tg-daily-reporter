@@ -1,26 +1,34 @@
 <script setup lang="ts">
 import Popup from "@components/Popup/Popup.vue";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useAuth } from "@/composables/useAuth";
 import Button from "@components/Button/Button.vue";
 import { getHomePath, getAboutPath, getAdminPath, getBeerPath, getRafflePath } from "@router/paths";
 import Icon from "@components/Icon/Icon.vue";
 import UserMenu from "../UserMenu/UserMenu.vue";
+import { useRoute } from "vue-router";
 
 const { loginWithGoogle, logout } = useAuth();
+const route = useRoute();
 
 const isOpen = ref(false);
 
-const handleTogglePopup = (open: boolean) => {
+const handleOpenChange = (open: boolean) => {
    isOpen.value = open;
+};
+
+const handleOpenMenu = () => {
+   isOpen.value = true;
 };
 
 const handleLoginWithGoogle = () => {
    loginWithGoogle();
+   isOpen.value = false;
 };
 
 const handleLogout = () => {
    logout();
+   isOpen.value = false;
 };
 
 type Props = {
@@ -28,11 +36,18 @@ type Props = {
    isAdmin: boolean;
 };
 const props = defineProps<Props>();
+
+watch(
+   () => route.fullPath,
+   () => {
+      isOpen.value = false;
+   },
+);
 </script>
 
 <template>
-   <Button variant="pure" icon="menu" :icon-size="24" @click="handleTogglePopup"></Button>
-   <Popup as-trigger-child :is-open="isOpen" size="full" @open-change="handleTogglePopup">
+   <Button variant="pure" icon="menu" :icon-size="24" @click="handleOpenMenu"></Button>
+   <Popup as-trigger-child :is-open="isOpen" size="full" @open-change="handleOpenChange">
       <!-- <template #title> Mobile Menu </template> -->
       <template #description>
          <div class="mobile-menu__description">

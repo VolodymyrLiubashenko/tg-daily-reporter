@@ -1,3 +1,7 @@
+<script setup lang="ts">
+import AdminSendMessage from "./SendMessage/AdminSendMessage.vue";
+</script>
+
 <template>
    <section class="admin">
       <div class="admin__panel">
@@ -13,6 +17,7 @@
          <h2 class="admin__placeholder-title">Місце для інструментів</h2>
          <p>Тут можна буде додати керування постами, перегляд даних або ручні дії для бота.</p>
       </div>
+      <AdminSendMessage />
    </section>
 </template>
 
@@ -88,4 +93,5 @@
    font-size: var(--font-size-lg);
    font-weight: 700;
 }
+
 </style>
