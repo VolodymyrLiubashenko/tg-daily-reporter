@@ -93,3 +93,21 @@
 `frontApp` uses CSS custom properties from `frontApp/src/styles/variables.scss` for light and dark theme colors. Dark mode is applied automatically with `prefers-color-scheme: dark` until the user chooses a theme. Manual selection is stored in `localStorage` and applied through `data-theme="light|dark"` on the `html` element.
 
 For frontend visual changes, use existing theme tokens first. If a new color or shadow is needed, add a semantic token in `variables.scss` with both light and dark values instead of hardcoding colors inside Vue component styles.
+
+## Admin Telegram tools
+
+The admin page in `frontApp` includes a Telegram bot message tool:
+
+- `POST /api/telegram/admin/send-message` sends the admin text to `TELEGRAM_CHAT_ID` through the bot with the existing Telegram HTML parse mode.
+- `POST /api/telegram/admin/edit-message` sends the current admin text to OpenAI for light editing and returns `editedText`; it does not send anything to Telegram.
+- Both endpoints require a Google session and backend allowlist membership through `ADMIN_EMAILS`.
+- Admin-sent messages and AI drafts are not saved to `BotMessage`.
+- The frontend keeps the AI result as a separate draft. The admin can apply it, cancel it with the close icon, or send the original text after cancelling the draft.
+
+Required backend env is documented in `.env.example`; required frontend env is documented in `frontApp/.env.example`.
+
+## Frontend request pattern
+
+All frontend API calls, including mutations, go through typed API modules plus TanStack Vue Query composables. Components should use hooks such as `useSendMessageByAdmin` or `useEditMessageByAdmin` instead of calling axios/API methods directly.
+
+`frontApp` keeps `zod` on v3 because `@vee-validate/zod@4.15.1` declares the peer range `zod@^3.24.0`. Upgrading `zod` to v4 requires upgrading or replacing the vee-validate adapter first.

@@ -99,11 +99,36 @@ npm run format:check
 
 ## API
 
+## Current app-specific rules
+
+### Admin Telegram message flow
+
+- Backend endpoints live under `/api/telegram/admin/*` and must stay protected by `requireAdmin`.
+- `requireAdmin` trusts `req.user` from Passport session and checks `req.user.email` against backend `env.adminEmails`.
+- `ADMIN_EMAILS` is a comma-separated backend env allowlist. Normalize email comparisons with trim/lowercase.
+- `send-message` sends to the configured `TELEGRAM_CHAT_ID` and must not call `trackBotMessage`.
+- `edit-message` uses OpenAI to lightly edit the admin's already-written text. The admin text is source text, not a prompt. The endpoint returns `editedText` and never sends to Telegram.
+- UI copy in the admin message form is Ukrainian.
+- When adding or changing env keys, update `.env.example` for the server and `frontApp/.env.example` for the frontend.
+
+### Frontend request pattern
+
 Required request pattern:
 
 - All frontend HTTP requests, including mutations, must be controlled through `@tanstack/vue-query` composables.
 - Components should call page/domain hooks such as `useGet...` or `useSend...`, not API methods directly.
 - When adding an endpoint, add typed API methods in `src/api/<domain>/`, wrap them in a composable with `useQuery` or `useMutation`, then use that composable in UI.
+- Admin Telegram hooks live next to the page component in `frontApp/src/pages/Admin/SendMessage/composables/`.
+
+### Frontend dependency note
+
+- Keep `frontApp` `zod` on v3 while `@vee-validate/zod@4.15.1` is installed. That adapter has peer dependency `zod@^3.24.0`; using `zod@4` breaks clean `npm install` on Vercel.
+
+### Component visual workflow
+
+- Do not run `visual-layout-audit` unless the user explicitly asks for it.
+- For quick component visual checks, temporarily mount the component at the bottom of the main/admin page, take a single screenshot at the current viewport, adjust until it looks right, then remove the temporary mount.
+- Do not perform multi-breakpoint visual audit by default.
 
 Общий axios-клиент находится в `src/api/client.ts`.
 

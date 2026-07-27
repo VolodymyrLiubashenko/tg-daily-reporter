@@ -8,6 +8,8 @@
 
 Use semantic CSS variables in components instead of hardcoded colors. If a new visual color is needed, add a token with both light and dark values before using it in component styles.
 
+Input and textarea borders should use shared theme tokens, not local color values. Dark theme borders need enough contrast to remain visible on dark surfaces; adjust `variables.scss` semantic border tokens instead of patching individual controls.
+
 ## Міксини (`mixins/mediaQuery.scss`)
 
 Медіа збігаються з **`src/composables/useMediaQuery.ts`** (`BREAKPOINTS`). Після зміни порогів оновіть обидва файли.

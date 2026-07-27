@@ -327,4 +327,49 @@ flowchart TB
 
 ---
 
+## 11. Admin Telegram tools
+
+Backend flow:
+
+- Route file: `src/routes/telegram.ts`.
+- Auth middleware: `src/middlewares/requireAdmin.ts`.
+- Controller: `src/controllers/telegramController.ts`.
+- Send service: `src/services/telegram/sendMessageByAdmin.ts`.
+- AI edit service: `src/services/openai/editAdminTelegramMessage.ts`.
+
+Endpoints:
+
+| Method | Path | Auth | Effect |
+|--------|------|------|--------|
+| POST | `/api/telegram/admin/send-message` | Google session + backend `ADMIN_EMAILS` allowlist | Sends `{ text }` to `TELEGRAM_CHAT_ID` as the bot. Does not save to `BotMessage`. |
+| POST | `/api/telegram/admin/edit-message` | Google session + backend `ADMIN_EMAILS` allowlist | Lightly edits `{ text }` with OpenAI and returns `editedText`. Does not send to Telegram and does not save to `BotMessage`. |
+
+Important behavior:
+
+- `ADMIN_EMAILS` is parsed in `src/config/env.ts` as a comma-separated list with trim/lowercase/filter-empty.
+- `requireAdmin` expects Passport to populate `req.user`; no user returns `401`, a non-allowlisted email returns `403`.
+- AI editing treats the admin's message as source text, not as an instruction prompt. The prompt asks OpenAI to preserve meaning, facts, language, links, numbers, names, and approximate length.
+- Telegram format stays `parse_mode: HTML` through the existing send helper.
+
+Frontend flow:
+
+- API types and methods live in `frontApp/src/api/telegram/`.
+- UI lives in `frontApp/src/pages/Admin/SendMessage/AdminSendMessage.vue`.
+- Mutations are wrapped by TanStack Vue Query composables in `frontApp/src/pages/Admin/SendMessage/composables/`.
+- The AI result is displayed as a separate draft beside the textarea on desktop and below it on mobile.
+- The admin must explicitly apply the draft; the close icon cancels the draft and re-enables sending/editing the current textarea text.
+
+Env examples:
+
+- Backend example env: `.env.example`.
+- Frontend example env: `frontApp/.env.example`.
+
+---
+
+## 12. Frontend dependency note
+
+`frontApp` uses `@vee-validate/zod@4.15.1`, whose peer dependency is `zod@^3.24.0`. Keep frontend `zod` on v3 until the vee-validate adapter is upgraded or replaced. `zod@4` causes `npm install` / Vercel deployment to fail with `ERESOLVE`.
+
+---
+
 *Останнє оновлення гайду узгоджене зі структурою репозиторію на момент створення файлу. При додаванні нових роутів або сервісів варто оновити цей документ.*

@@ -68,3 +68,34 @@ When changing UI styles:
 - keep both light and dark values for every new color/shadow token;
 - avoid component-local hex/rgb colors except for fixed brand assets or image/SVG artwork;
 - check the changed screen in both light and dark system themes when the change affects colors, cards, overlays, badges, shadows, or borders.
+
+## API and TanStack Query
+
+All frontend HTTP calls go through typed API modules and TanStack Vue Query composables:
+
+1. Add request/response types in `src/api/<domain>/<domain>ApiTypes.ts`.
+2. Add the axios method in `src/api/<domain>/<domain>Api.ts`.
+3. Wrap the method with `useQuery` or `useMutation` in a composable.
+4. Use the composable from Vue components; do not call API methods directly from components.
+
+Admin Telegram API files live in `src/api/telegram/`. The admin send/edit page uses local mutation composables in `src/pages/Admin/SendMessage/composables/`.
+
+## Admin message UI
+
+`src/pages/Admin/SendMessage/AdminSendMessage.vue` lets an allowlisted admin:
+
+- write a Telegram message with `FormTextArea`;
+- ask AI to lightly edit the current text;
+- review the AI result as a separate draft;
+- apply the draft or cancel it with the close icon;
+- send the final textarea text to Telegram.
+
+On desktop the AI draft is shown beside the textarea; on mobile it appears below it. If a textarea validation error exists, the send button is disabled. If an AI draft exists, both send and AI edit buttons stay disabled until the admin applies or cancels the draft.
+
+## Env example
+
+Frontend env keys are documented in `frontApp/.env.example`. The Vite dev server still proxies `/api/*` to the backend, so local admin tools require the backend to run on port `3000`.
+
+## Dependency note
+
+`@vee-validate/zod@4.15.1` requires peer `zod@^3.24.0`. Keep frontend `zod` on v3 until that adapter is upgraded or replaced; `zod@4` breaks clean installs on Vercel with `ERESOLVE`.
