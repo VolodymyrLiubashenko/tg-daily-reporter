@@ -1,7 +1,7 @@
 import { WeeklyWinnerModel } from "../../models/WeeklyWinner";
 import { ChatMessageModel } from "../../models/ChatMessage";
 import { getActiveUsersForPeriod } from "../activity/getActiveUsersForPeriod";
-import { pickRandomIndex } from "./pickRandomIndex";
+import { pickWinnerIndex } from "./pickWinnerIndex";
 
 export async function pickWeeklyWinner(chatId: string, startDate: Date, endDate: Date) {
    const activeUsers = await getActiveUsersForPeriod(chatId, startDate, endDate);
@@ -10,7 +10,7 @@ export async function pickWeeklyWinner(chatId: string, startDate: Date, endDate:
       throw new Error("No active users found for selected period");
    }
 
-   const randomIndex = pickRandomIndex(activeUsers.length);
+   const randomIndex = pickWinnerIndex(activeUsers);
    const winner = activeUsers[randomIndex];
 
    await WeeklyWinnerModel.create({

@@ -1,14 +1,10 @@
 import axios from "axios";
 
-/**
- * Team `/schedule` often omits upcoming fixtures; league scoreboard with `dates`
- * returns scheduled EPL matches including MU.
- */
-const ESPN_EPL_SCOREBOARD_URL =
-   "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard";
+/** `all` includes every competition; `fixture=true` selects upcoming matches. */
+const ESPN_MU_FIXTURES_URL =
+   "https://site.api.espn.com/apis/site/v2/sports/soccer/all/teams/360/schedule?fixture=true";
 
 const MU_TEAM_ID = "360";
-const LOOKAHEAD_DAYS = 45;
 
 export type TNextMatch = {
    opponent: string;
@@ -42,23 +38,9 @@ type TEspnEvent = {
    };
 };
 
-type TEspnScoreboardResponse = {
+type TEspnScheduleResponse = {
    events?: TEspnEvent[];
 };
-
-function formatEspnCalendarDayUtc(d: Date): string {
-   const y = d.getUTCFullYear();
-   const m = String(d.getUTCMonth() + 1).padStart(2, "0");
-   const day = String(d.getUTCDate()).padStart(2, "0");
-   return `${y}${m}${day}`;
-}
-
-function buildScoreboardDatesQuery(): string {
-   const start = new Date();
-   const end = new Date(start);
-   end.setUTCDate(end.getUTCDate() + LOOKAHEAD_DAYS);
-   return `${formatEspnCalendarDayUtc(start)}-${formatEspnCalendarDayUtc(end)}`;
-}
 
 function eventKickoffMs(e: TEspnEvent): number {
    const raw = e.date ?? e.competitions?.[0]?.date;
@@ -88,10 +70,7 @@ function isFutureFixture(e: TEspnEvent, nowMs: number): boolean {
 
 export async function getNextManchesterUnitedMatch(): Promise<TNextMatch | null> {
    try {
-      const dates = buildScoreboardDatesQuery();
-      const url = `${ESPN_EPL_SCOREBOARD_URL}?dates=${encodeURIComponent(dates)}`;
-
-      const response = await axios.get<TEspnScoreboardResponse>(url, {
+      const response = await axios.get<TEspnScheduleResponse>(ESPN_MU_FIXTURES_URL, {
          timeout: 15000,
       });
 
@@ -120,7 +99,7 @@ export async function getNextManchesterUnitedMatch(): Promise<TNextMatch | null>
       return {
          opponent: opponent.team.displayName,
          utcDate,
-         competition: next.league?.name ?? "English Premier League",
+         competition: next.league?.name ?? "Футбол",
          venue: muCompetitor.homeAway ?? "home",
       };
    } catch (err) {

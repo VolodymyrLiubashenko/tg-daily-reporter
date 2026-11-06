@@ -19,7 +19,7 @@ export async function getTapBeerList(): Promise<TTapBeer[]> {
 
    const names = new Set<string>();
 
-   $(".product-card-beer-name a").each((_, element) => {
+   $(".bb-guest-beer__name a").each((_, element) => {
       const name = $(element).text().trim();
 
       if (name) {
